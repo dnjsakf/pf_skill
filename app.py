@@ -12,7 +12,8 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 # Create Flask APP
 app = create_app(**{
   "ROOT_PATH": ROOT_PATH,
-  "STATIC_PATH": os.path.join(ROOT_PATH, "dist")
+  "BUILD_PATH": os.path.join(ROOT_PATH, "dist"),
+  "STATIC_PATH": os.path.join(ROOT_PATH, "dist/public")
 })
 
 if __name__ == '__main__':

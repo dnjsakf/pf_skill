@@ -6,7 +6,8 @@ from flask_cors import CORS
 def create_app(*args, **kwargs):
   APP_PATH = os.path.dirname(os.path.abspath(__file__))  
   ROOT_PATH = kwargs.get("ROOT_PATH", os.path.join(APP_PATH, "../"))
-  STATIC_PATH = kwargs.get("STATIC_PATH", os.path.join(ROOT_PATH, 'dist'))
+  BUILD_PATH = kwargs.get("BUILD_PATH", os.path.join(ROOT_PATH, 'dist'))
+  STATIC_PATH = kwargs.get("STATIC_PATH", os.path.join(BUILD_PATH, 'dist/public'))
   TEMPLATE_PATH = os.path.join(APP_PATH, "templates")
 
   # Application
@@ -16,6 +17,8 @@ def create_app(*args, **kwargs):
     static_folder=STATIC_PATH,
     template_folder=TEMPLATE_PATH
   )
+
+  app.config["BUILD_PATH"] = BUILD_PATH
 
   with app.app_context():
     # Set Configuration
