@@ -1,20 +1,18 @@
-/* React */
-import React, { Suspense, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-/* Router */
 import { NavLink as RouterLink } from 'react-router-dom';
 
-/* Materialize */
 import { makeStyles } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
-/* Another Modules */
 import clsx from 'clsx';
+
+import { Query } from "react-apollo";
+import QUERY from './../../../../../../graphql/queries';
 
 /* Materialize Styles */
 const useStyles = makeStyles((theme)=>({
@@ -66,7 +64,6 @@ const SidebarNav = ( props )=>{
   /* Props */
   const classes = useStyles();
   const {
-    pages,
     className,
     ...rest
   } = props;
@@ -77,34 +74,41 @@ const SidebarNav = ( props )=>{
       {...rest}
       className={ clsx(classes.root, className )}
     >
-    {
-      pages.map(({ title, href, Icon })=>(
-        <ListItem
-          key={ title }
-          className={classes.item}
-          disableGutters
-        >
-          <Button
-            activeClassName={ classes.active }
-            className={ classes.button }
-            component={ CustomRouterLink }
-            to={ href }
-          >
-            <div className={ classes.icon }>
-              <Icon />
-            </div>
-            { title }
-          </Button>
-        </ListItem>
-      ))
-    }
+      <Query query={QUERY.GET_SIDE_BAR_MENUS}>
+        {({ loading, error, data }) => {
+          if (loading) return "Loading...";
+          if (error) return `Error! ${error.message}`;
+          return data.sidebarMenus.map(({ title, href, icon })=> (
+            <ListItem
+              key={ title }
+              className={classes.item}
+              disableGutters
+            >
+              <Button
+                activeClassName={ classes.active }
+                className={ classes.button }
+                component={ CustomRouterLink }
+                to={ href }
+              >
+                {
+                  icon && (
+                    <div className={ classes.icon }>
+                      {/* <Icon /> */}
+                    </div>
+                  )
+                }
+                { title }
+              </Button>
+            </ListItem>
+          ));
+        }}
+      </Query>
     </List>
   );
 };
 
 SidebarNav.propTypes = {
   className: PropTypes.string,
-  pages: PropTypes.array.isRequired
 };
 
 export default SidebarNav;

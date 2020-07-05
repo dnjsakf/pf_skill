@@ -9,6 +9,7 @@ module.exports = merge(config, {
   plugins: [
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),
+      GRAPHQL_URL: JSON.stringify("http://localhost:3000/graphql"),
     }),
     new webpack.EnvironmentPlugin({
       LOGGING_LEVEL: JSON.stringify("DEBUG"),

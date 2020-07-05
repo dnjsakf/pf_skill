@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -42,55 +42,13 @@ const styles = theme => ({
   }
 });
 
-const pages = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    Icon: DashboardIcon
-  },
-  {
-    title: 'Users',
-    href: '/users',
-    Icon: PeopleIcon
-  },
-  {
-    title: 'Products',
-    href: '/products',
-    Icon: ShoppingBasketIcon
-  },
-  {
-    title: 'Authentication',
-    href: '/sign-in',
-    Icon: LockOpenIcon
-  },
-  {
-    title: 'Typography',
-    href: '/typography',
-    Icon: TextFieldsIcon
-  },
-  {
-    title: 'Icons',
-    href: '/icons',
-    Icon: ImageIcon
-  },
-  {
-    title: 'Account',
-    href: '/account',
-    Icon: AccountBoxIcon
-  },
-  {
-    title: 'Settings',
-    href: '/settings',
-    Icon: SettingsIcon
-  }
-];
-
 class SideBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {  }
+    this.state = {}
   }
+
   render() {
     const {
       className,
@@ -100,7 +58,7 @@ class SideBar extends Component {
       onClose,
       rest
     } = this.props;
-    
+
     return (
       <Drawer
         anchor="left"
@@ -115,10 +73,7 @@ class SideBar extends Component {
         >
           <Profile />
           <Divider className={ classes.divider } />
-          <SidebarNav
-            className={ classes.nav }
-            pages={ pages }
-          />
+          <SidebarNav className={ classes.nav } />
         </div>
       </Drawer>
     );

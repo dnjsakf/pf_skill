@@ -5,6 +5,9 @@ import { hot } from 'react-hot-loader/root';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
 
+import { ApolloProvider } from 'react-apollo';
+import client from './graphql/client';
+
 const App = React.lazy(() => import('./App'));
 
 function render(Component){
@@ -14,9 +17,11 @@ function render(Component){
   
   RouterDomRender(
     <Suspense fallback={<div>Loading...</div>}>
-      <ThemeProvider theme={ theme }>
-        <Component/>
-      </ThemeProvider>
+      <ApolloProvider client={ client }>
+        <ThemeProvider theme={ theme }>
+          <Component/>
+        </ThemeProvider>
+      </ApolloProvider>
     </Suspense>
     , root
   );

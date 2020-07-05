@@ -1,2 +1,2 @@
-MONGO_URL="mongomock://localhost"
-MONGO_DTATBASE="graphql-example"
+FLASK_MONGO_URL="mongomock://localhost"
+FLASK_MONGO_DATABASE="graphql-example"

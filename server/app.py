@@ -2,6 +2,10 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
+from flask_graphql import GraphQLView
+
+from server.graphql import schema
+from server.database import connect_db
 
 def create_app(*args, **kwargs):
   APP_PATH = os.path.dirname(os.path.abspath(__file__))  
@@ -22,10 +26,20 @@ def create_app(*args, **kwargs):
 
   with app.app_context():
     # Set Configuration
-    config_py = os.environ.get("FLAKS_APP_CONFIG_PY", None)
-    if config_py is not None and os.path.exists( config_py ):
-      app.config.from_pyfile(config_py)
-    
+    flask_config = os.environ.get("FLASK_CONFIG", "config/flask.config.py")
+    if flask_config is not None:
+      app.config.from_pyfile(flask_config)
+
+    # Set GraphQL EndPoint 설정
+    app.add_url_rule(
+      '/graphql',
+      view_func=GraphQLView.as_view(
+        'graphql',
+        schema=schema,
+        graphiql=True
+      )
+    )
+
     # Set CORS Middleware
     CORS(app=app, resources={
       r"*": { "origin": "*" }
@@ -33,5 +47,12 @@ def create_app(*args, **kwargs):
     
     # Set Routes
     from server import routes
+
+    import pprint
+
+    MONGO_HOST=os.environ.get("FLASK_MONGO_URL", app.config.get("FLASK_MONGO_URL", None))
+    MONGO_DATABASE=os.environ.get("FLASK_MONGO_DATABASE", app.config.get("FLASK_MONGO_DATABASE", None))
+
+    connect_db(app.config["FLASK_MONGO_DATABASE"], app.config["FLASK_MONGO_URL"], mockup=True)
   
   return app
