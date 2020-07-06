@@ -1,9 +1,9 @@
-import React, { forwardRef } from 'react';
+import React, { Component, Suspense, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { NavLink as RouterLink } from 'react-router-dom';
 
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,11 +11,16 @@ import Button from '@material-ui/core/Button';
 
 import clsx from 'clsx';
 
-import { Query } from "react-apollo";
-import QUERY from './../../../../../../graphql/queries';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import PeopleIcon from '@material-ui/icons/People';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import ImageIcon from '@material-ui/icons/Image';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import SettingsIcon from '@material-ui/icons/Settings';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
-/* Materialize Styles */
-const useStyles = makeStyles((theme)=>({
+const styles = theme => ({
   root: {},
   item: {
     display: 'flex',
@@ -47,9 +52,8 @@ const useStyles = makeStyles((theme)=>({
       color: theme.palette.primary.main
     }
   }
-}));
+});
 
-/* Component */
 const CustomRouterLink = forwardRef((props, ref) => (
   <div
     ref={ref}
@@ -59,26 +63,49 @@ const CustomRouterLink = forwardRef((props, ref) => (
   </div>
 ));
 
-/* Component */
-const SidebarNav = ( props )=>{
-  /* Props */
-  const classes = useStyles();
-  const {
-    className,
-    ...rest
-  } = props;
+function loadIcon( name ){
+  switch( name ){
+    case "Image":
+      return ImageIcon;
+      break;
+    case "Setting":
+      return SettingsIcon;
+      break;
+    default:
+      return null;
+  }
+}
+
+class SidebarNav extends Component {
+  constructor(props){
+    super(props);
+    
+    this.state = {}
+  }
   
-  /* Rendering */
-  return (
-    <List
-      {...rest}
-      className={ clsx(classes.root, className )}
-    >
-      <Query query={QUERY.GET_SIDE_BAR_MENUS}>
-        {({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error) return `Error! ${error.message}`;
-          return data.sidebarMenus.map(({ title, href, icon })=> (
+  render(){
+    const {
+      className,
+      classes,
+      loading,
+      error,
+      data,
+      ...rest
+    } = this.props;
+    
+    if ( loading ) return ( <h3>SideBar Loadding...</h3> );
+    if ( error ) return `Error! ${error.message}`;
+    
+    return (
+      <List
+        {...rest}
+        className={ clsx( classes.root, className )}
+      >
+      {
+        data && data.map(({ title, href, icon })=>{
+          const Icon = loadIcon(icon);
+          
+          return (
             <ListItem
               key={ title }
               className={classes.item}
@@ -91,24 +118,25 @@ const SidebarNav = ( props )=>{
                 to={ href }
               >
                 {
-                  icon && (
+                  Icon && (
                     <div className={ classes.icon }>
-                      {/* <Icon /> */}
+                      <Icon />
                     </div>
                   )
                 }
                 { title }
               </Button>
             </ListItem>
-          ));
-        }}
-      </Query>
-    </List>
-  );
-};
+          );
+        })
+      }
+      </List>
+    );
+  }
+}
 
 SidebarNav.propTypes = {
   className: PropTypes.string,
 };
 
-export default SidebarNav;
+export default withStyles(styles)(SidebarNav);

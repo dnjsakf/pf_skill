@@ -15,8 +15,10 @@ def init_mockup():
   import datetime
   from server.graphql.models import SideBarMenuModel
 
-  menus_home = SideBarMenuModel(title="Home", href="/home", icon="ImageIcon", sort_order=1)
-  menus_test = SideBarMenuModel(title="Test", href="/test", icon="ImageIcon", sort_order=2)
+  menus_home = SideBarMenuModel(title="Home", href="/home", icon="Image", sort_order=1)
+  menus_test = SideBarMenuModel(title="Test", href="/test", icon="Image", sort_order=2)
+  menus_setting = SideBarMenuModel(title="Setting", href="/setting", icon="Setting", sort_order=999)
 
   menus_home.save()
   menus_test.save()
+  menus_setting.save()

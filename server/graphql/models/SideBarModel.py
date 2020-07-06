@@ -3,7 +3,7 @@ from mongoengine.queryset import queryset_manager
 
 class SideBarMenuModel(Document):
   meta = {
-    "collection": "sidebar_menu_mst"
+    "collection": "side_bar_menu_mst"
   }
   # no = fields.SequenceField(collection_name="sidebar_menu_mst")
 

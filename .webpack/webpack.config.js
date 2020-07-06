@@ -10,6 +10,7 @@ module.exports = {
   entry: {
     app: [
       '@babel/polyfill',
+      '@material-ui/icons',
       path.join(__dirname, "../src/index.js"),
       path.join(__dirname, "../src/index.css"),
     ],

@@ -1,23 +1,17 @@
 import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+
+import { graphql } from "react-apollo";
+import { GET_SIDE_BAR_MENUS } from './graphql/queries';
 
 import { withStyles } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ImageIcon from '@material-ui/icons/Image';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-
 import { Profile, SidebarNav } from './components';
 
 import clsx from 'clsx';
+
 
 const styles = theme => ({
   drawer: {
@@ -42,13 +36,14 @@ const styles = theme => ({
   }
 });
 
+
 class SideBar extends Component {
   constructor(props) {
     super(props);
 
     this.state = {}
   }
-
+  
   render() {
     const {
       className,
@@ -58,6 +53,16 @@ class SideBar extends Component {
       onClose,
       rest
     } = this.props;
+    
+    const SideBarNavWithQuery = graphql(
+      GET_SIDE_BAR_MENUS, {
+        props: ({ data: { loading, error, sideBarMenus }}) => ({
+          loading,
+          error,
+          data: sideBarMenus
+        }),
+      }
+    )(SidebarNav);
 
     return (
       <Drawer
@@ -73,11 +78,11 @@ class SideBar extends Component {
         >
           <Profile />
           <Divider className={ classes.divider } />
-          <SidebarNav className={ classes.nav } />
+          <SideBarNavWithQuery />
         </div>
       </Drawer>
     );
   }
 }
  
-export default withStyles(styles, { withTheme: true })( SideBar);
+export default withStyles(styles, { withTheme: true })( SideBar );

@@ -86,7 +86,7 @@ class Main extends Component {
     const shouldOpenSideBar = isDesktop ? true : isOpenSideBar;
 
     return (
-      // <ErrorBoundary>
+      <ErrorBoundary>
         <Suspense fallback={<h3>Main Layout Loading...</h3>}>
           <Container isDesktop={ isDesktop }>
             <Header onOpenSideBar={ this.handleOpenSideBar }/>
@@ -104,7 +104,7 @@ class Main extends Component {
             </Section>
           </Container>
         </Suspense>
-      // </ErrorBoundary>
+      </ErrorBoundary>
     );
   }
 }
