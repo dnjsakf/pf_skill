@@ -7,6 +7,8 @@ const MainLayout = React.lazy(()=>import('./layouts/Main'));
 
 /* Routes */
 const Home = React.lazy(()=>import('./routes/Home'));
+const SkillStack = React.lazy(()=>import('./routes/SkillStack'));
+const Settings = React.lazy(()=>import('./routes/Settings'));
 const NotFound = React.lazy(()=>import('./routes/NotFound'));
 
 /* Component */
@@ -45,40 +47,46 @@ class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    console.group("shouldComponentUpdate");
-    console.log("nextProps:", nextProps);
-    console.log("nextState:", nextState);
-    console.groupEnd("shouldComponentUpdate");
+    console.groupCollapsed(`App.shouldComponentUpdate`);
+    console.log("props", {
+      crnt: this.props,
+      next: nextProps
+    });
+    console.log("state", {
+      crnt: this.state,
+      next: nextState
+    });
+    console.groupEnd(`App.shouldComponentUpdate`);
 
     return true;
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState){
-    console.group("getSnapshotBeforeUpdate");
+    console.groupCollapsed(`App.getSnapshotBeforeUpdate`);
     console.log("prevProps:", prevProps);
     console.log("prevState:", prevState);
-    console.groupEnd("getSnapshotBeforeUpdate");
+    console.groupEnd(`App.getSnapshotBeforeUpdate`);
 
     return null;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
-    console.group("componentDidUpdate");
+    console.groupCollapsed(`App.componentDidUpdate`);
     console.log("prevProps:", prevProps);
     console.log("prevState:", prevState);
     console.log("snapshot:", snapshot);
-    console.groupEnd("componentDidUpdate");
+    console.groupEnd(`App.componentDidUpdate`);
   }
 
   componentDidCatch(error, info){
-    console.group("componentDidCatch");
+    console.groupCollapsed(`App.componentDidCatch`);
     console.log("error:", error);
     console.log("info:", info);
-    console.groupEnd("componentDidCatch");
+    console.groupEnd(`App.componentDidCatch`);
   }
 
   componentWillUnmount(){
-    console.log("componentWillUnmount");
+    console.log(`App.componentWillUnmount`);
   }
 
   render(){
@@ -95,6 +103,16 @@ class App extends Component {
               path="/home"
               layout={ MainLayout }
               component={ Home }
+            />
+            <RouteWithLayout
+              path="/skill-stack"
+              layout={ MainLayout }
+              component={ SkillStack }
+            />
+            <RouteWithLayout
+              path="/settings"
+              layout={ MainLayout }
+              component={ Settings }
             />
             <Route
               exact

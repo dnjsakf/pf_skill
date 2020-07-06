@@ -51,10 +51,11 @@ class Header extends Component {
         className={ clsx( classes.root, className ) }
       >
         <Toolbar>
-          <RouterLink to="/">
+          <RouterLink to="/home">
             <img
               alt="Logo"
-              src="/public/images/logos/logo--white.svg"
+              src="/public/images/logos/Pokemon.png"
+              height="50px"
             />
           </RouterLink>
           <div className={ classes.flexGrow } />

@@ -12,6 +12,6 @@ class SideBarMenuQuery(graphene.ObjectType):
 
   @classmethod
   def resolve_side_bar_menus(cls, root, info):
-    return SideBarMenuModel.objects(usable=True).all().order_by("+sort_order")
+    return SideBarMenuModel.objects(parent=None, usable=True).all().order_by("+sort_order")
 
     

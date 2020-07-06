@@ -1,8 +1,5 @@
-import React, { Component, lazy } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import { graphql } from "react-apollo";
-import { GET_SIDE_BAR_MENUS } from './graphql/queries';
 
 import { withStyles } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider';
@@ -11,7 +8,6 @@ import Drawer from '@material-ui/core/Drawer';
 import { Profile, SidebarNav } from './components';
 
 import clsx from 'clsx';
-
 
 const styles = theme => ({
   drawer: {
@@ -36,12 +32,15 @@ const styles = theme => ({
   }
 });
 
-
-class SideBar extends Component {
+class SideBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = { }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return true;
   }
   
   render() {
@@ -53,17 +52,7 @@ class SideBar extends Component {
       onClose,
       rest
     } = this.props;
-    
-    const SideBarNavWithQuery = graphql(
-      GET_SIDE_BAR_MENUS, {
-        props: ({ data: { loading, error, sideBarMenus }}) => ({
-          loading,
-          error,
-          data: sideBarMenus
-        }),
-      }
-    )(SidebarNav);
-
+ 
     return (
       <Drawer
         anchor="left"
@@ -78,11 +67,17 @@ class SideBar extends Component {
         >
           <Profile />
           <Divider className={ classes.divider } />
-          <SideBarNavWithQuery />
+          <SidebarNav />
         </div>
       </Drawer>
     );
   }
+}
+
+SideBar.propTypes = {
+  className: PropTypes.string,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
  
 export default withStyles(styles, { withTheme: true })( SideBar );
