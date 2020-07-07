@@ -4,6 +4,10 @@
     ["@babel/preset-react",{ "modules": false }]
   ],
   "plugins": [
+    [ "module-resolver", {
+        "root": [ "./src" ]
+      }
+    ],
     [ "@babel/plugin-proposal-decorators", { "legacy": true } ],
     "@babel/plugin-proposal-class-properties",
     "react-hot-loader/babel"

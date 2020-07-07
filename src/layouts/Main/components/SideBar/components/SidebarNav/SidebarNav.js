@@ -10,7 +10,7 @@ import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 import SideBarNavItem from './components/SideBarNavItem';
-import CircularProgress from './../../../../../../components/Progress/CircularProgress';
+import CircularProgress from 'components/Progress/CircularProgress';
 
 const styles = theme => ({
   root: {},

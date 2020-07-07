@@ -3,7 +3,7 @@ const path = require("path");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const TerserJSPlugin = require("terser-webpack-plugin");
+// const TerserJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
       path.join(__dirname, "../src/index.css"),
     ],
     vendor: [
-      "react", "react-dom"
+      "react", "react-dom", "apollo-client"
     ]
   },
   output: {
@@ -81,11 +81,11 @@ module.exports = {
       }
     },
     minimizer: [
-      new TerserJSPlugin({
-        cache: true,
-        parallel: true,
-      }), 
+      // new TerserJSPlugin({
+      //   cache: true,
+      //   parallel: true,
+      // }), 
       new OptimizeCSSAssetsPlugin({})
     ],
-  }
+  },
 }

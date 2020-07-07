@@ -1,7 +1,7 @@
 {
   "name": "pf_skill",
   "version": "1.0.0",
-  "description": "Webpack setting example 2",
+  "description": "pf_skill",
   "main": "index.js",
   "scripts": {
     "build": "npx webpack --config .webpack/webpack.config.prod.js",
@@ -16,6 +16,7 @@
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-link-context": "^1.0.20",
     "apollo-link-http": "^1.5.17",
+    "babel-plugin-module-resolver": "^4.0.0",
     "clsx": "^1.1.1",
     "graphql": "^15.2.0",
     "graphql-tag": "^2.10.3",
