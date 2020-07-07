@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import { withStyles } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider';
@@ -32,6 +33,14 @@ const styles = theme => ({
   }
 });
 
+const Container = styled.div`
+  background-color: ${({ theme })=> theme.palette.white };
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: ${({ theme })=> theme.spacing(2) }px;
+`;
+
 class SideBar extends React.Component {
   constructor(props) {
     super(props);
@@ -47,28 +56,27 @@ class SideBar extends React.Component {
     const {
       className,
       classes,
+      theme,
+      location,
       open,
       variant,
       onClose,
-      rest
+      ...rest
     } = this.props;
  
     return (
       <Drawer
         anchor="left"
         classes={{ paper: classes.drawer }}
-        onClose={onClose}
-        open={open}
+        onClose={ onClose }
+        open={ open }
         variant={ variant }
       >
-        <div
-          {...rest}
-          className={ clsx(classes.root, className) }
-        >
+        <Container theme={ theme }>
           <Profile />
           <Divider className={ classes.divider } />
-          <SidebarNav />
-        </div>
+          <SidebarNav location={ location } />        
+        </Container>
       </Drawer>
     );
   }

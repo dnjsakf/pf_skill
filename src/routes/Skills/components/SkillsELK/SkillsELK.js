@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container = styled.div`
 `;
 
-class Home extends React.Component {
+class SkillsELK extends React.Component {
   constructor(props) {
     super(props);
     
@@ -13,10 +13,10 @@ class Home extends React.Component {
   render() { 
     return ( 
       <Container>
-        Section
+        SkillsELK
       </Container>
     );
   }
 }
  
-export default Home;
+export default SkillsELK;

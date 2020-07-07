@@ -3,25 +3,25 @@ const path = require("path");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserJSPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   entry: {
     app: [
-      '@babel/polyfill',
+      "@babel/polyfill",
       path.join(__dirname, "../src/index.js"),
       path.join(__dirname, "../src/index.css"),
     ],
     vendor: [
-      'react', 'react-dom'
+      "react", "react-dom"
     ]
   },
   output: {
     filename: "[name].bundle.js",
     path: path.join(__dirname, "../dist"),
     publicPath: "/public/",
-    chunkFilename: '[name].chunk.js',
+    chunkFilename: "[name].chunk.js",
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -61,13 +61,13 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       minSize: 30000,
       maxSize: 0,
       minChunks: 1,
       maxAsyncRequests: 6,
       maxInitialRequests: 4,
-      automaticNameDelimiter: '~',
+      automaticNameDelimiter: "~",
       cacheGroups: {
         defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
@@ -87,5 +87,5 @@ module.exports = {
       }), 
       new OptimizeCSSAssetsPlugin({})
     ],
-  },
+  }
 }

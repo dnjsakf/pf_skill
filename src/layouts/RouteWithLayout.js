@@ -6,6 +6,7 @@ const RouteWithLayout = ( props )=>{
   const {
     layout: Layout,
     component: Component,
+    location,    
     ...rest
   } = props;
 
@@ -13,7 +14,7 @@ const RouteWithLayout = ( props )=>{
     <Route
       {...rest}
       render={matchProps => (
-        <Layout>
+        <Layout location={ location }>
           <Component {...matchProps} />
         </Layout>
       )}

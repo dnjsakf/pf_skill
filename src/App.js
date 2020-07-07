@@ -1,21 +1,34 @@
 import React, { Component, Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 /* Layouts */
 const RouteWithLayout = React.lazy(()=>import('./layouts/RouteWithLayout'));
 const MainLayout = React.lazy(()=>import('./layouts/Main'));
 
 /* Routes */
 const Home = React.lazy(()=>import('./routes/Home'));
-const SkillStack = React.lazy(()=>import('./routes/SkillStack'));
+const Skills = React.lazy(()=>import('./routes/Skills'));
 const Settings = React.lazy(()=>import('./routes/Settings'));
-const NotFound = React.lazy(()=>import('./routes/NotFound'));
+
+const NotFound = ( props )=>{
+  const {
+    className
+  } = props;
+
+  return (
+    <div>
+      <h1>Page Not Found</h1>
+    </div>
+  )
+}
 
 /* Component */
 class App extends Component {
   constructor(props){
     super(props);
-
+    
     this.state = {
       toggle: this.props.toggle,
       hasError: false,
@@ -91,8 +104,8 @@ class App extends Component {
 
   render(){
     return (
-      <Router>
-        <Suspense fallback={<h3>App Loading...</h3>}>
+      <ErrorBoundary>
+        <Router>
           <Switch>
             <Redirect
               exact
@@ -105,24 +118,24 @@ class App extends Component {
               component={ Home }
             />
             <RouteWithLayout
-              path="/skill-stack"
+              path="/skills"
               layout={ MainLayout }
-              component={ SkillStack }
+              component={ Skills }
             />
             <RouteWithLayout
               path="/settings"
               layout={ MainLayout }
               component={ Settings }
             />
-            <Route
-              exact
-              path="/not-found"
+            <RouteWithLayout
+              path="/notfound"
+              layout={ MainLayout }
               component={ NotFound }
             />
-            <Redirect to="/not-found" />
+            <Redirect to="/notfound" />
           </Switch>
-        </Suspense>
-      </Router>
+        </Router>
+      </ErrorBoundary>
     )
   }
 }

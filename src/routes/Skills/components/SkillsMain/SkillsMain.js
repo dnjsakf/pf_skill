@@ -4,19 +4,18 @@ import styled from 'styled-components';
 const Container = styled.div`
 `;
 
-class Home extends React.Component {
+class SkillsMain extends React.Component {
   constructor(props) {
     super(props);
-    
     this.state = {  }
   }
   render() { 
     return ( 
       <Container>
-        Section
+        SkillsMain
       </Container>
     );
   }
 }
  
-export default Home;
+export default SkillsMain;

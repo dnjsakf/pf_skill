@@ -1,15 +1,16 @@
-import React, { Component, Suspense } from 'react';
-import ErrorBoundary from './components/ErrorBoundary';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
+import clsx from 'clsx';
 
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
-import { withStyles } from '@material-ui/styles';
 
-import clsx from 'clsx';
+import ErrorBoundary from './../../components/ErrorBoundary';
+import CircularProgress from './../../components/Progress/CircularProgress';
 
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));
 const SideBar = React.lazy(()=>import('./components/SideBar'));
+
 
 const Container = styled.div`
   padding-top: 56px;
@@ -35,7 +36,7 @@ const SectionWrapper = styled.div`
   padding: 5px;
 `;
 
-class Main extends Component {
+class Main extends React.Component {
   constructor(props) {
     super(props);
 
@@ -87,21 +88,37 @@ class Main extends Component {
 
     return (
       <ErrorBoundary>
-        <Suspense fallback={<h3>Main Layout Loading...</h3>}>
+        <Suspense fallback={ <CircularProgress /> }>
           <Container isDesktop={ isDesktop }>
-            <Header onOpenSideBar={ this.handleOpenSideBar }/>
-            <SideBar
-              isDesktop={ isDesktop }
-              open={ shouldOpenSideBar }
-              onClose={ this.handleCloseSideBar }
-              variant={ isDesktop ? 'persistent' : 'temporary'}
-            />
-            <Section>
-              <SectionWrapper>
-                { this.props.children }
-              </SectionWrapper>
-              <Footer />
-            </Section>
+            <ErrorBoundary>
+              <Suspense fallback={ <CircularProgress />  }>
+                <Header onOpenSideBar={ this.handleOpenSideBar }/>
+              </Suspense>
+            </ErrorBoundary>
+            
+            <ErrorBoundary>
+              <Suspense fallback={ <CircularProgress /> }>
+                <SideBar
+                  isDesktop={ isDesktop }
+                  open={ shouldOpenSideBar }
+                  onClose={ this.handleCloseSideBar }
+                  variant={ isDesktop ? 'persistent' : 'temporary'}
+                  location={ this.props.location }
+                />
+              </Suspense>
+            </ErrorBoundary>
+            
+            <ErrorBoundary>
+              <Suspense fallback={ <CircularProgress />  }>
+                <Section>
+                  <SectionWrapper>
+                    { this.props.children }
+                  </SectionWrapper>
+                </Section>
+                <Footer />
+              </Suspense>
+            </ErrorBoundary>
+            
           </Container>
         </Suspense>
       </ErrorBoundary>
@@ -109,4 +126,4 @@ class Main extends Component {
   }
 }
  
-export default withWidth()(Main);
+export default withWidth()( Main );

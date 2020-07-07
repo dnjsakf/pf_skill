@@ -1,66 +1,83 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { graphql } from "react-apollo";
 import { GET_SIDE_BAR_MENUS } from './graphql/queries';
 
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-import clsx from 'clsx';
-
 import SideBarNavItem from './components/SideBarNavItem';
+import CircularProgress from './../../../../../../components/Progress/CircularProgress';
 
-const useStyles = makeStyles((theme)=>({
+const styles = theme => ({
   root: {},
-}));
+});
 
-const SidebarNav = ( props )=>{
-  const {
-    className,
-    loading,
-    error,
-    menus,
-    ...rest
-  } = props;
-
-  const classes = useStyles();
-
-  if ( loading ) return ( <h3>SideBar Loadding...</h3> );
-  if ( error ) return `Error! ${error.message}`;
+class SidebarNav extends React.Component {
+  constructor(props){
+    super(props);
+    
+    this.state = {}
+  }
   
-  return (
-    <List
-      {...rest}
-      className={ clsx( classes.root, className )}
-      aria-labelledby="nested-sidebar-menu"
-      subheader={
-        <ListSubheader component="div" id="nested-sidebar-menu">
-          Menus
-        </ListSubheader>
+  render(){
+    const {
+      classes,
+      className,
+      loading,
+      error,
+      menus,
+      ...rest
+    } = this.props;
+    
+    if ( loading ) return ( <CircularProgress /> );
+    if ( error ) return `Error! ${error.message}`;
+
+    return (
+      <List
+        {...rest}
+        className={ clsx( classes.root, className )}
+        aria-labelledby="nested-sidebar-menu"
+        subheader={
+          <ListSubheader component="div" id="nested-sidebar-menu">
+            { this.props.location.pathname }
+          </ListSubheader>
+        }
+      >
+      {
+        menus && menus.map(( options, idx )=>{
+          const isLast = idx === menus.length - 1;
+          
+          return (
+            <SideBarNavItem 
+              { ...options }
+              key={ options.title }
+              isLast={ isLast }
+            />
+          )
+        })
       }
-    >
-    {
-      menus && menus.map(( options )=>{
-        return ( <SideBarNavItem key={ options.title } { ...options } /> )
-      })
-    }
-    </List>
-  );
+      </List>
+    );
+  }
 }
 
 SidebarNav.propTypes = {
   className: PropTypes.string,
 };
 
-export default graphql(
-  GET_SIDE_BAR_MENUS, {
-    fetchPolicy: "cache-and-network",
-    props: ({ data: { loading, error, sideBarMenus }}) => ({
-      loading,
-      error,
-      menus: sideBarMenus,
-    }),
-  }
-)( SidebarNav );;
+export default withStyles( styles, { withTheme: true })(
+  graphql(
+    GET_SIDE_BAR_MENUS, {
+      fetchPolicy: "cache-and-network",
+      props: ({ data: { loading, error, sideBarMenus }}) => ({
+        loading,
+        error,
+        menus: sideBarMenus,
+      }),
+    }
+  )( SidebarNav )
+);
