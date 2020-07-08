@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import sidebarAction from 'reducers/sidebar/actionCreators';
+import sidebarAction from 'reducers/sidebar/actions';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -66,8 +66,8 @@ class Header extends Component {
             <IconButton color="inherit">
               <Badge
                 badgeContent={ this.state.notifications.length }
-                color="primary"
-                variant="dot"
+                color="error"
+                variant="standard"
               >
                 <NotificationsIcon />
               </Badge>
@@ -99,7 +99,9 @@ Header.propTypes = {
 }
 
 const mapDispatchToProps = dispatch => ({
-  openSideBar: _ => dispatch( sidebarAction.open() ),
+  openSideBar() {
+    dispatch( sidebarAction.open() );
+  },
 });
 
 export default connect( null, mapDispatchToProps )( withStyles(styles, { withTheme: true })( Header ) );

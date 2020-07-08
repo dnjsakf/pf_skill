@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import { reducer as sidebar } from "./sidebar";
-import { reducer as layout } from "./layout";
+import sidebar from "./sidebar/reducer";
+import layout from "./layout/reducer";
 
 export default combineReducers({
   sidebar,

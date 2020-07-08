@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { connect } from 'react-redux';
-import sidebarAction from 'reducers/sidebar/actionCreators';
+import * as sidebarSelector from 'reducers/sidebar/selectors';
+import sidebarAction from 'reducers/sidebar/actions';
 
 import { withStyles } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider';
@@ -92,12 +93,14 @@ SideBar.propTypes = {
   onClose: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ sidebar }) => ({
-  isOpen: sidebar.isOpen,
+const mapStateToProps = state => ({
+  isOpen: sidebarSelector.getIsOpen(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  onClose: _ => dispatch( sidebarAction.close() )
+  onClose(){
+    dispatch( sidebarAction.close() );
+  },
 });
  
 export default connect( mapStateToProps, mapDispatchToProps )( withStyles(styles, { withTheme: true })( SideBar ) );

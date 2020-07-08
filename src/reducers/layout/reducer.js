@@ -1,17 +1,22 @@
 import { handleActions } from 'redux-actions';
 
-import * as actions from './actions';
+import actions from './actions';
 
 const defaultState = {
   isDesktop: false
 }
 
 const reducer = handleActions(
-  {
-    [actions.SET_IS_DESKTOP]: (state, action) => ({
-      isDesktop: action.payload
-    })
-  }
+  new Map([
+    [
+      actions.setIsDesktop,
+      (state, action) => (
+        Object.assign({}, state, {
+          isDesktop: action.payload
+        })
+      )
+    ]
+  ])
   , defaultState
   , actions.options
 );

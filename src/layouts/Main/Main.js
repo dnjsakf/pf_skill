@@ -1,11 +1,12 @@
 import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import layoutAction from 'reducers/layout/actionCreators';
-import sidebarAction from 'reducers/sidebar/actionCreators';
+import * as layoutSelector from 'reducers/layout/selectors';
+import layoutAction from 'reducers/layout/actions';
+import * as sidebarSelector from 'reducers/sidebar/selectors';
+import sidebarAction from 'reducers/sidebar/actions';
 
 import { isWidthUp } from '@material-ui/core/withWidth';
 
@@ -15,7 +16,6 @@ import CircularProgress from 'components/Progress/CircularProgress';
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));
 const SideBar = React.lazy(()=>import('./components/SideBar'));
-
 
 const Container = styled.div`
   padding-top: 56px;
@@ -38,7 +38,6 @@ const Section = styled.main`
 
 const SectionWrapper = styled.div`
   height: 100%;
-  padding: 5px;
 `;
 
 class Main extends React.Component {
@@ -62,12 +61,13 @@ class Main extends React.Component {
       
       return true;
     }
+
+    // Changed Page
+    if( nextProps.location.pathname !== this.props.location.pathname ){
+      return true;
+    }
     
     return false;
-  }
-  
-  componentDidUpdate(){
-    console.log('updated', this.props.isDesktop, this.props.isOpenSideBar);
   }
 
   render() {
@@ -124,15 +124,21 @@ Main.propTypes = {
   openSideBar: PropTypes.func,
 }
 
-const mapPropsToState = ({ layout, sidebar }) => ({
-  isDesktop: layout.isDesktop,
-  isOpenSideBar: sidebar.isOpen,
+const mapPropsToState = state => ({
+  isDesktop: layoutSelector.getIsDesktop(state),
+  isOpenSideBar: sidebarSelector.getIsOpen(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  setIsDesktop: isDesktop => dispatch( layoutAction.setIsDesktop( isDesktop ) ),
-  setIsOpenSideBar: isOpen => dispatch( sidebarAction.setIsOpen( isOpen ) ),
-  openSideBar: _ => dispatch( sidebarAction.open() ),
+  setIsDesktop( isDesktop ){
+    dispatch( layoutAction.setIsDesktop( isDesktop ) )
+  },
+  setIsOpenSideBar( isOpen ){
+    dispatch( sidebarAction.setIsOpen( isOpen ) );
+  },
+  openSideBar(){
+    dispatch( sidebarAction.open() );
+  },
 });
  
 export default connect( mapPropsToState, mapDispatchToProps )( Main );

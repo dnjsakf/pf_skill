@@ -19,7 +19,7 @@ const RouteWithLayout = props =>{
       {...rest}
       render={ matchProps => (
         <Layout location={ location } width={ width }>
-          <Component {...matchProps} />
+          <Component { ...matchProps } />
         </Layout>
       )}
     />
