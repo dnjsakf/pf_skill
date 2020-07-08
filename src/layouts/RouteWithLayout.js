@@ -2,19 +2,23 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const RouteWithLayout = ( props )=>{
+import withWidth from '@material-ui/core/withWidth';
+
+
+const RouteWithLayout = props =>{
   const {
     layout: Layout,
     component: Component,
-    location,    
+    location,
+    width,
     ...rest
   } = props;
 
   return (
     <Route
       {...rest}
-      render={matchProps => (
-        <Layout location={ location }>
+      render={ matchProps => (
+        <Layout location={ location } width={ width }>
           <Component {...matchProps} />
         </Layout>
       )}
@@ -25,7 +29,8 @@ const RouteWithLayout = ( props )=>{
 RouteWithLayout.propTypes = {
   layout: PropTypes.any.isRequired,
   component: PropTypes.any.isRequired,
-  path: PropTypes.string
+  path: PropTypes.string,
+  width: PropTypes.string,
 };
 
-export default RouteWithLayout;
+export default withWidth()( RouteWithLayout );

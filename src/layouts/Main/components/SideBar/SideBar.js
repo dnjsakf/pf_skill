@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { connect } from 'react-redux';
+import sidebarAction from 'reducers/sidebar/actionCreators';
+
 import { withStyles } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -54,12 +57,12 @@ class SideBar extends React.Component {
   
   render() {
     const {
-      className,
       classes,
       theme,
       location,
-      open,
+      className,
       variant,
+      isOpen,
       onClose,
       ...rest
     } = this.props;
@@ -69,7 +72,7 @@ class SideBar extends React.Component {
         anchor="left"
         classes={{ paper: classes.drawer }}
         onClose={ onClose }
-        open={ open }
+        open={ isOpen }
         variant={ variant }
       >
         <Container theme={ theme }>
@@ -84,8 +87,17 @@ class SideBar extends React.Component {
 
 SideBar.propTypes = {
   className: PropTypes.string,
-  open: PropTypes.bool.isRequired,
+  variant: PropTypes.string,
+  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 }
+
+const mapStateToProps = ({ sidebar }) => ({
+  isOpen: sidebar.isOpen,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onClose: _ => dispatch( sidebarAction.close() )
+});
  
-export default withStyles(styles, { withTheme: true })( SideBar );
+export default connect( mapStateToProps, mapDispatchToProps )( withStyles(styles, { withTheme: true })( SideBar ) );

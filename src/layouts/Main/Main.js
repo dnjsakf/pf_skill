@@ -1,11 +1,16 @@
 import React, { Suspense } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import clsx from 'clsx';
 
-import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
+import { connect } from 'react-redux';
+import layoutAction from 'reducers/layout/actionCreators';
+import sidebarAction from 'reducers/sidebar/actionCreators';
 
-import ErrorBoundary from './../../components/ErrorBoundary';
-import CircularProgress from './../../components/Progress/CircularProgress';
+import { isWidthUp } from '@material-ui/core/withWidth';
+
+import ErrorBoundary from 'components/ErrorBoundary';
+import CircularProgress from 'components/Progress/CircularProgress';
 
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));
@@ -39,52 +44,42 @@ const SectionWrapper = styled.div`
 class Main extends React.Component {
   constructor(props) {
     super(props);
-
-    const isDesktop = isWidthUp('lg', props.width);
-
-    this.state = {
-      isDesktop: isDesktop,
-      isOpenSideBar: isDesktop ? true : false
-    }
-
-    this.handleOpenSideBar = this.handleOpenSideBar.bind( this );
-    this.handleCloseSideBar = this.handleCloseSideBar.bind( this );
   }
-
-  handleOpenSideBar(){
-    this.setState((state)=>(Object.assign(state, { isOpenSideBar: true })));
-  }
-
-  handleCloseSideBar(){
-    this.setState((state)=>(Object.assign(state, { isOpenSideBar: false })));
+  
+  componentDidMount(){
+    const isDesktop = isWidthUp('lg', this.props.width);
+    
+    this.props.setIsDesktop( isDesktop );
+    this.props.setIsOpenSideBar( isDesktop );
   }
 
   shouldComponentUpdate(nextProps, nextState){
+    // When resized window.
     const isDesktop = isWidthUp('lg', nextProps.width);
-
-    if( nextState.isDesktop !== isDesktop ){
-      this.setState((state)=>(Object.assign(this.state, {
-        isDesktop: isDesktop,
-        isOpenSideBar: !!isDesktop
-      })))
+    if( this.props.isDesktop !== nextProps.isDesktop || isDesktop !== this.props.isDesktop ) {
+      this.props.setIsDesktop( isDesktop );
+      this.props.setIsOpenSideBar( isDesktop );
+      
+      return true;
     }
-
-    return true;
+    
+    return false;
+  }
+  
+  componentDidUpdate(){
+    console.log('updated', this.props.isDesktop, this.props.isOpenSideBar);
   }
 
   render() {
     const {
-      isDesktop,
-      isOpenSideBar
-    } = this.state;
-
-    const {
       classes,
+      location,
       className,
+      isDesktop,
+      isOpenSideBar,
+      openSideBar,
       ...rest
     } = this.props;
-
-    const shouldOpenSideBar = isDesktop ? true : isOpenSideBar;
 
     return (
       <ErrorBoundary>
@@ -92,18 +87,15 @@ class Main extends React.Component {
           <Container isDesktop={ isDesktop }>
             <ErrorBoundary>
               <Suspense fallback={ <CircularProgress />  }>
-                <Header onOpenSideBar={ this.handleOpenSideBar }/>
+                <Header />
               </Suspense>
             </ErrorBoundary>
             
             <ErrorBoundary>
               <Suspense fallback={ <CircularProgress /> }>
                 <SideBar
-                  isDesktop={ isDesktop }
-                  open={ shouldOpenSideBar }
-                  onClose={ this.handleCloseSideBar }
+                  location={ location }
                   variant={ isDesktop ? 'persistent' : 'temporary'}
-                  location={ this.props.location }
                 />
               </Suspense>
             </ErrorBoundary>
@@ -125,5 +117,22 @@ class Main extends React.Component {
     );
   }
 }
+
+Main.propTypes = {
+  isDesktop: PropTypes.bool,
+  isOPenSideBar: PropTypes.bool,
+  openSideBar: PropTypes.func,
+}
+
+const mapPropsToState = ({ layout, sidebar }) => ({
+  isDesktop: layout.isDesktop,
+  isOpenSideBar: sidebar.isOpen,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setIsDesktop: isDesktop => dispatch( layoutAction.setIsDesktop( isDesktop ) ),
+  setIsOpenSideBar: isOpen => dispatch( sidebarAction.setIsOpen( isOpen ) ),
+  openSideBar: _ => dispatch( sidebarAction.open() ),
+});
  
-export default withWidth()( Main );
+export default connect( mapPropsToState, mapDispatchToProps )( Main );

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import sidebarAction from 'reducers/sidebar/actionCreators';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -14,6 +16,7 @@ import InputIcon from '@material-ui/icons/Input';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 
 import clsx from 'clsx';
+
 
 const styles = theme => ({
   root: {
@@ -41,7 +44,7 @@ class Header extends Component {
       theme,
       classes,
       className,
-      onOpenSideBar,
+      openSideBar,
       ...rest
     } = this.props;
 
@@ -79,7 +82,7 @@ class Header extends Component {
           <Hidden lgUp>
             <IconButton
               color="inherit"
-              onClick={ this.props.onOpenSideBar }
+              onClick={ openSideBar }
             >
               <MenuIcon />
             </IconButton>
@@ -92,7 +95,11 @@ class Header extends Component {
 
 Header.propTypes = {
   className: PropTypes.string,
-  onOpenSideBar: PropTypes.func
-};
+  openSideBar: PropTypes.func.isRequired,
+}
 
-export default withStyles(styles, { withTheme: true })( Header );
+const mapDispatchToProps = dispatch => ({
+  openSideBar: _ => dispatch( sidebarAction.open() ),
+});
+
+export default connect( null, mapDispatchToProps )( withStyles(styles, { withTheme: true })( Header ) );

@@ -2,6 +2,7 @@ const config = require("./webpack.config.js");
 
 const merge = require("webpack-merge");
 const webpack = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = merge(config, {
   mode: "development",
@@ -14,6 +15,20 @@ module.exports = merge(config, {
     new webpack.EnvironmentPlugin({
       LOGGING_LEVEL: JSON.stringify("DEBUG"),
       DEBUG: 1
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "src/public",
+          to: "public",
+          globOptions: {
+            ignore: [
+              "**/.*",
+              "**/private/**",
+            ],
+          }
+        },
+      ],
     }),
   ],
   module:{
