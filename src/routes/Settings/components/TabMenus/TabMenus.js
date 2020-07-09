@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
+
+import theme from "theme";
+
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -8,24 +11,12 @@ import Tab from '@material-ui/core/Tab';
 import TabBar from './components/TabBar';
 import TabPanel from './components/TabPanel';
 
-const styles = theme => ({
-  root: {
-    position: "relative",
-    flexGrow: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-});
-
-function a11yProps(index) {
-  return {
-    id: `scrollable-auto-tab-${index}`,
-    'aria-controls': `scrollable-auto-tabpanel-${index}`,
-  };
-}
-
-
+const Container = styled.div`
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme })=>( theme.palette.background.paper )};
+`;
 
 class TabMenus extends React.Component {
   constructor(props) {
@@ -46,7 +37,6 @@ class TabMenus extends React.Component {
 
   render() {
     const {
-      classes,
       id,
       ariaControls,
       menus,
@@ -56,7 +46,7 @@ class TabMenus extends React.Component {
     const { value } = this.state;
 
     return ( 
-      <div className={ classes.root }>
+      <Container theme={ theme }>
         <TabBar
           id={ id }
           ariaControls={ ariaControls }
@@ -65,15 +55,17 @@ class TabMenus extends React.Component {
           onChange={ this.handleChange }
         />
         {
-          menus && menus.map(({ index, label })=>(
-            <TabPanel key={ id+index } value={ value } index={ index }>
-              { label }
-            </TabPanel>
-          ))
+          menus && menus.map(({ index, label, component: Component })=>{
+            return (
+              <TabPanel key={ id+index } id={ ariaControls } index={ index } value={ value }>
+                { Component && <Component /> }
+              </TabPanel>
+            );
+          })
         }
-      </div>
+      </Container>
     );
   }
 }
  
-export default withStyles(styles)(TabMenus);
+export default TabMenus;

@@ -5,7 +5,8 @@ import Box from '@material-ui/core/Box';
 
 const TabPanel = props => {
   const { 
-    children, 
+    children,
+    id,
     value, 
     index, 
     ...rest
@@ -15,8 +16,8 @@ const TabPanel = props => {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
+      id={`${id}-tabpanel-${index}`}
+      aria-labelledby={`${id}-${index}`}
       {...rest}
     >
       {value === index && (
@@ -30,6 +31,7 @@ const TabPanel = props => {
 
 TabPanel.propTypes = {
   children: PropTypes.node,
+  id: PropTypes.string.isRequired,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
