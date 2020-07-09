@@ -1,22 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import theme from "theme";
-
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { withStyles } from '@material-ui/core/styles';
 
 import TabBar from './components/TabBar';
 import TabPanel from './components/TabPanel';
 
-const Container = styled.div`
-  flex-grow: 1;
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme })=>( theme.palette.background.paper )};
-`;
+const styles = theme => ({
+  root: {
+    position: "relative",
+    flexGrow: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+});
 
 class TabMenus extends React.Component {
   constructor(props) {
@@ -37,16 +34,19 @@ class TabMenus extends React.Component {
 
   render() {
     const {
+      classes,
       id,
       ariaControls,
       menus,
       ...rest
     } = this.props;
 
-    const { value } = this.state;
+    const {
+      value
+    } = this.state;
 
     return ( 
-      <Container theme={ theme }>
+      <div className={ classes.root }>
         <TabBar
           id={ id }
           ariaControls={ ariaControls }
@@ -57,15 +57,19 @@ class TabMenus extends React.Component {
         {
           menus && menus.map(({ index, label, component: Component })=>{
             return (
-              <TabPanel key={ id+index } id={ ariaControls } index={ index } value={ value }>
+              <TabPanel key={ id+index } id={ id } value={ value } index={ index }>
                 { Component && <Component /> }
               </TabPanel>
-            );
+            )
           })
         }
-      </Container>
+      </div>
     );
   }
 }
+
+TabMenus.propTypes = {
+
+}
  
-export default TabMenus;
+export default withStyles(styles)(TabMenus);

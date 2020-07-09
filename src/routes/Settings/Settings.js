@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import CircularProgress from 'components/Progress/CircularProgress';
 
 const MenuSetting = React.lazy(()=>( import('./routes/MenuSetting') ));
+const ThemeSetting = React.lazy(()=>( import('./routes/ThemeSetting') ));
 const TabMenus = React.lazy(()=>( import('./components/TabMenus')) );
 
 const Container = styled.div`
@@ -14,7 +15,6 @@ const Container = styled.div`
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.state = {  }
   }
@@ -54,12 +54,11 @@ Settings.defaultProps = {
     { 
       index: 1, 
       label: "테마설정",
-      component: MenuSetting
+      component: ThemeSetting
     },
     { 
       index: 2, 
       label: "권한설정" ,
-      component: MenuSetting
     },
   ],
 };
