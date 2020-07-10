@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 /* Router */
 import { Link as RouterLink } from 'react-router-dom';
 
-/* Materialize */
+/* Material-UI */
 import { makeStyles } from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 /* Another Modules */
 import clsx from 'clsx';
 
-/* Materialize Styles */
+/* Hooks */
 const useStyles = makeStyles((theme)=>({
   root: {
     display: 'flex',
@@ -30,20 +30,20 @@ const useStyles = makeStyles((theme)=>({
   }
 }));
 
+/* Contants */
+const user = {
+  name: 'Dochi',
+  avatar: '/public/images/avatars/dochi.jpeg',
+  bio: 'Developer'
+};
+
 /* Component */
 const Profile = ( props )=>{
-  /* Props */
   const classes = useStyles();
   const {
     className,
     ...rest
   } = props;
-
-  const user = {
-    name: 'Dochi',
-    avatar: '/public/images/avatars/dochi.jpeg',
-    bio: 'Developer'
-  };
 
   /* Rendering */
   return (
@@ -64,7 +64,9 @@ const Profile = ( props )=>{
       >
         { user.name }
       </Typography>
-      <Typography variant="body2">{ user.bio }</Typography>
+      <Typography variant="body2">
+        { user.bio }
+      </Typography>
     </div>
   );
 };

@@ -1,18 +1,30 @@
+/* React */
 import React from 'react';
 import PropTypes from 'prop-types';
+
+/* Redux */
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import * as sidebarSelector from '@reducers/sidebar/selectors';
+import sidebarAction from '@reducers/sidebar/actions';
+
+/* GraphQL */
+import { graphql } from "react-apollo";
+import { GET_SIDE_BAR_MENUS, mocks } from './graphql/queries';
+import { MockedProvider } from "@apollo/react-testing";
+
+/* Styled */
 import styled from 'styled-components';
 
-import { connect } from 'react-redux';
-import * as sidebarSelector from 'reducers/sidebar/selectors';
-import sidebarAction from 'reducers/sidebar/actions';
-
+/* Material-UI */
 import { withStyles } from '@material-ui/styles';
-import Divider from '@material-ui/core/Divider';
+import Divider from '@material-ui/core/Divider'; 
 import Drawer from '@material-ui/core/Drawer';
 
+/* Custom Components */
 import { Profile, SidebarNav } from './components';
 
-
+/* Constants */
 const styles = theme => ({
   drawer: {
     width: 240,
@@ -26,6 +38,7 @@ const styles = theme => ({
   },
 });
 
+/* Sub Components */
 const Container = styled.div`
   background-color: ${({ theme })=> theme.palette.white };
   display: flex;
@@ -34,6 +47,19 @@ const Container = styled.div`
   padding: ${({ theme })=> theme.spacing(2) }px;
 `;
 
+/* GraphQL HOC */
+const SidebarNavWithQuery = graphql(
+  GET_SIDE_BAR_MENUS, {
+    fetchPolicy: "cache-and-network",
+    //props: ({ data: { loading, error, sideBarMenus }}) => ({
+    //  loading,
+    //  error,
+    //  menus: sideBarMenus,
+    //}),
+  }
+)( SidebarNav );
+
+/* Main Component */
 class SideBar extends React.Component {
   constructor(props) {
     super(props);
@@ -68,13 +94,16 @@ class SideBar extends React.Component {
         <Container theme={ theme }>
           <Profile />
           <Divider className={ classes.divider } />
-          <SidebarNav location={ location } />        
+          <MockedProvider mocks={ mocks } addTypename={ false }>
+            <SidebarNavWithQuery location={ location } />
+          </MockedProvider>
         </Container>
       </Drawer>
     );
   }
 }
 
+/* Main Component Settings */
 SideBar.propTypes = {
   className: PropTypes.string,
   variant: PropTypes.string,
@@ -82,14 +111,18 @@ SideBar.propTypes = {
   onClose: PropTypes.func.isRequired,
 }
 
+/* Mapping to props */
 const mapStateToProps = state => ({
   isOpen: sidebarSelector.getIsOpen(state),
 });
-
 const mapDispatchToProps = dispatch => ({
   onClose(){
     dispatch( sidebarAction.close() );
   },
 });
  
-export default connect( mapStateToProps, mapDispatchToProps )( withStyles(styles, { withTheme: true })( SideBar ) );
+/* Exports */
+export default compose(
+  connect( mapStateToProps, mapDispatchToProps ),
+  withStyles(styles, { withTheme: true })
+)( SideBar );

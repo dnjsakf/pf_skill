@@ -1,19 +1,27 @@
+/* React */
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
+/* Router */
 import { Link as RouterLink } from 'react-router-dom';
 
+/* Styled */
+import styled from 'styled-components';
+
+/* Material-UI */
 import { withStyles } from '@material-ui/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import theme from 'theme';
+/* Custom Theme */
+import theme from '@theme';
 
+/* Styled Components */
 const Container = styled.div`
   backgroun-color: ${({ theme })=>( theme.palette.background.paper )};
 `;
 
+/* Sub Components */
 const CustomTabs = withStyles((theme)=>({
   root: {
     borderBottom: '1px solid #e8e8e8',
@@ -56,6 +64,7 @@ const CustomTab = withStyles((theme)=>({
   selected: {},
 }))( props => <Tab disableRipple {...props} /> );
 
+/* Main Component */
 class TabBar extends React.Component {
   constructor(props) {
     super(props);
@@ -63,9 +72,7 @@ class TabBar extends React.Component {
 
   render() {
     const {
-      id,
-      ariaControls,
-      menus,
+      tabs,
       value,
       onChange,
       ...rest
@@ -78,15 +85,16 @@ class TabBar extends React.Component {
           onChange={ onChange }
           variant="scrollable"
           scrollButtons="auto"
-          aria-label="scrollable auto tabs"
+          aria-label="settings tabs"
         >
         {
-          menus && menus.map(({ index, label })=>(
+          tabs && tabs.map(({ id, label }, index)=>(
             <CustomTab
-              key={ id+index } 
-              id={ id }
-              label={ label } 
-              aria-controls={ ariaControls }
+              key={ id }
+              id={ [id, "tab"].join("-") }
+              label={ label }
+              aria-controls={ [id, "panel"].join("-") }
+              { ...rest }
             />
           ))
         }
@@ -96,9 +104,12 @@ class TabBar extends React.Component {
   }
 }
 
+/* Main Component Settings */
 TabBar.propTypes = {
+  tabs: PropTypes.array,
   value: PropTypes.any,
-  menus: PropTypes.array,
+  onChange: PropTypes.func,
 }
- 
+
+/* Exports */
 export default TabBar;

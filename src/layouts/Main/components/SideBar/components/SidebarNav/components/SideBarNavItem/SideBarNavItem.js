@@ -1,9 +1,11 @@
+/* React */
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 
+/* Router */
 import { NavLink as RouterLink } from 'react-router-dom';
 
+/* Material-UI */
 import { makeStyles, withStyles } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
@@ -20,6 +22,10 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
+/* Another Modules */
+import clsx from 'clsx';
+
+/* Constants */
 const loadIcon = name => {
   switch( name ){
     case "Image":
@@ -35,6 +41,7 @@ const loadIcon = name => {
   }
 }
 
+/* Styles Hook */
 const useStyles = makeStyles((theme)=>({
   root: {},
   item: {
@@ -75,6 +82,7 @@ const useStyles = makeStyles((theme)=>({
   },
 }));
 
+/* Sub Components */
 const CustomRouterLink = forwardRef((props, ref) => (
   <div
     ref={ref}
@@ -166,6 +174,7 @@ const SideBarSubNav = ( props )=>{
   );
 }
 
+/* Main Component */
 const SideBarNavItem = ( props )=>{
   const classes = useStyles();
   const {
@@ -216,8 +225,10 @@ const SideBarNavItem = ( props )=>{
   );
 }
 
+/* Main Component Settings */
 SideBarNavItem.propTypes = {
   className: PropTypes.string,
 };
 
+/* Exports */
 export default SideBarNavItem;

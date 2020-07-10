@@ -1,10 +1,14 @@
+/* React */
 import React from 'react';
-import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+/* Router */
+import { Route } from 'react-router-dom';
+
+/* Material-UI */
 import withWidth from '@material-ui/core/withWidth';
 
-
+/* Main Component */
 const RouteWithLayout = props =>{
   const {
     layout: Layout,
@@ -26,6 +30,7 @@ const RouteWithLayout = props =>{
   );
 };
 
+/* Main Component Settings */
 RouteWithLayout.propTypes = {
   layout: PropTypes.any.isRequired,
   component: PropTypes.any.isRequired,
@@ -33,4 +38,5 @@ RouteWithLayout.propTypes = {
   width: PropTypes.string,
 };
 
+/* Exports */
 export default withWidth()( RouteWithLayout );

@@ -1,5 +1,8 @@
+/* Webpack */
+import { hot } from 'react-hot-loader/root';
+
 /* React */
-import React, { Suspense } from "react";
+import React from "react";
 import { render as RouterDomRender } from "react-dom";
 
 /* Redux */
@@ -7,20 +10,16 @@ import { createStore } from "redux";
 import { Provider as StoreProvider } from "react-redux";
 import rootReducer from "./reducers";
 
-/* Material UI */
-import { ThemeProvider } from "@material-ui/styles";
-import theme from "./theme";
-
 /* GraphQL */
 import { ApolloProvider } from "react-apollo";
 import client from "./graphql/client";
 
-/* Webpack */
-import { hot } from 'react-hot-loader/root';
+/* Material-UI */
+import { ThemeProvider } from "@material-ui/styles";
+import theme from "./theme";
 
 /* Common Component */
-import ErrorBoundary from "./components/ErrorBoundary";
-import CircularProgress from "./components/Progress/CircularProgress";
+import { CircularSuspense } from "./components/Suspense";
 
 /* App Component */
 const App = React.lazy(() => import("./App"));
@@ -35,17 +34,15 @@ function render(Component){
   Component = module.hot ? hot( Component ) : Component;
   
   RouterDomRender(
-    <ErrorBoundary>
-      <Suspense fallback={ <CircularProgress /> }>
-        <StoreProvider store={ store }>
-          <ApolloProvider client={ client }>
-            <ThemeProvider theme={ theme }>
-              <Component/>
-            </ThemeProvider>
-          </ApolloProvider>
-        </StoreProvider>
-      </Suspense>
-    </ErrorBoundary>
+    <CircularSuspense>
+      <StoreProvider store={ store }>
+        <ApolloProvider client={ client }>
+          <ThemeProvider theme={ theme }>
+            <Component/>
+          </ThemeProvider>
+        </ApolloProvider>
+      </StoreProvider>
+    </CircularSuspense>
     , root
   );
 }

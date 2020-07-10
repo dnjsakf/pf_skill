@@ -1,39 +1,43 @@
+/* React */
 import React from 'react';
 import PropTypes from 'prop-types';
+
+/* Material-UI */
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+/* Main Component */
 const TabPanel = props => {
   const { 
     children,
-    id,
-    value, 
-    index, 
+    selected,
     ...rest
   } = props;
 
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
-      id={`${id}-tabpanel-${index}`}
-      aria-labelledby={`${id}-${index}`}
+      hidden={ !selected }
       {...rest}
     >
-      {value === index && (
-        <Box p={3}>
+    {
+      selected && (
+        <Box p={ 3 }>
           { children }
         </Box>
-      )}
+      )
+    }
     </div>
   );
 }
 
+/* Main Component Settings */
 TabPanel.propTypes = {
   children: PropTypes.node,
   id: PropTypes.string.isRequired,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  "aria-labelledby": PropTypes.string.isRequired,
+  selected: PropTypes.bool.isRequired,
 };
 
+/* Exports */
 export default TabPanel;

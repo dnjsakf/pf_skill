@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
+/* React */
+import React from 'react';
 import PropTypes from 'prop-types';
 
+/* Material-UI */
 import { withStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
+/* Another Modules */
 import clsx from 'clsx';
 
+/* Constants */
 const styles = theme =>({
   root: {
     padding: theme.spacing(4)
   }
 });
 
-class Footer extends Component {
+/* Main Component */
+class Footer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {  }
@@ -50,8 +55,10 @@ class Footer extends Component {
   }
 }
 
+/* Main Component Settings */
 Footer.propTypes = {
   className: PropTypes.string
 };
 
+/* Exports */
 export default withStyles(styles, { withTheme: true })( Footer );

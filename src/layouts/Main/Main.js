@@ -1,22 +1,29 @@
-import React, { Suspense } from 'react';
+/* React */
+import React from 'react';
 import PropTypes from 'prop-types';
+
+/* Styled */
 import styled from 'styled-components';
 
+/* Redux */
 import { connect } from 'react-redux';
-import * as layoutSelector from 'reducers/layout/selectors';
-import layoutAction from 'reducers/layout/actions';
-import * as sidebarSelector from 'reducers/sidebar/selectors';
-import sidebarAction from 'reducers/sidebar/actions';
+import * as layoutSelector from '@reducers/layout/selectors';
+import layoutAction from '@reducers/layout/actions';
+import * as sidebarSelector from '@reducers/sidebar/selectors';
+import sidebarAction from '@reducers/sidebar/actions';
 
+/* Material-UI */
 import { isWidthUp } from '@material-ui/core/withWidth';
 
-import ErrorBoundary from 'components/ErrorBoundary';
-import CircularProgress from 'components/Progress/CircularProgress';
+
+/* Custom Component */
+import { CircularSuspense } from 'components/Suspense';
 
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));
 const SideBar = React.lazy(()=>import('./components/SideBar'));
 
+/* Styled Components */
 const Container = styled.div`
   padding-top: 56px;
   height: 100%;
@@ -40,6 +47,8 @@ const SectionWrapper = styled.div`
   height: 100%;
 `;
 
+
+/* Main Compoent */
 class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +78,10 @@ class Main extends React.Component {
     
     return false;
   }
+  
+  componentDidUpdate(){
+    document.scrollingElement.scrollTop = 0;
+  }
 
   render() {
     const {
@@ -82,48 +95,42 @@ class Main extends React.Component {
     } = this.props;
 
     return (
-      <ErrorBoundary>
-        <Suspense fallback={ <CircularProgress /> }>
-          <Container isDesktop={ isDesktop }>
-            <ErrorBoundary>
-              <Suspense fallback={ <CircularProgress />  }>
-                <Header />
-              </Suspense>
-            </ErrorBoundary>
-            
-            <ErrorBoundary>
-              <Suspense fallback={ <CircularProgress /> }>
-                <SideBar
-                  location={ location }
-                  variant={ isDesktop ? 'persistent' : 'temporary'}
-                />
-              </Suspense>
-            </ErrorBoundary>
-            
-            <ErrorBoundary>
-              <Suspense fallback={ <CircularProgress />  }>
-                <Section>
-                  <SectionWrapper>
-                    { this.props.children }
-                  </SectionWrapper>
-                </Section>
-                <Footer />
-              </Suspense>
-            </ErrorBoundary>
-            
-          </Container>
-        </Suspense>
-      </ErrorBoundary>
+      <CircularSuspense>
+        <Container isDesktop={ isDesktop }>
+          <CircularSuspense>
+            <Header />
+          </CircularSuspense>
+          
+          <CircularSuspense>
+            <SideBar
+              location={ location }
+              variant={ isDesktop ? 'persistent' : 'temporary'}
+            />
+          </CircularSuspense>
+          
+          <CircularSuspense>
+            <Section>
+              <SectionWrapper>
+                { this.props.children }
+              </SectionWrapper>
+            </Section>
+            <Footer />
+          </CircularSuspense>
+          
+        </Container>
+      </CircularSuspense>
     );
   }
 }
 
+/* Main Component Settings */
 Main.propTypes = {
   isDesktop: PropTypes.bool,
   isOPenSideBar: PropTypes.bool,
   openSideBar: PropTypes.func,
 }
 
+/* Mapping to props */
 const mapPropsToState = state => ({
   isDesktop: layoutSelector.getIsDesktop(state),
   isOpenSideBar: sidebarSelector.getIsOpen(state),
@@ -140,5 +147,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch( sidebarAction.open() );
   },
 });
- 
+
+/* Exports */
 export default connect( mapPropsToState, mapDispatchToProps )( Main );

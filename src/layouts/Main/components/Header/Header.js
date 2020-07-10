@@ -1,10 +1,16 @@
+/* React */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import sidebarAction from 'reducers/sidebar/actions';
 
+/* Router */
 import { Link as RouterLink } from 'react-router-dom';
 
+/* Redux */
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import sidebarAction from '@reducers/sidebar/actions';
+
+/* Material-UI */
 import { withStyles } from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,9 +21,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import InputIcon from '@material-ui/icons/Input';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 
+/* Another Modules */
 import clsx from 'clsx';
 
-
+/* Constants */
 const styles = theme => ({
   root: {
     boxShadow: 'none'
@@ -30,6 +37,7 @@ const styles = theme => ({
   }
 });
 
+/* Main Component */
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -93,15 +101,21 @@ class Header extends Component {
   }
 }
 
+/* Main Component Settings */
 Header.propTypes = {
   className: PropTypes.string,
   openSideBar: PropTypes.func.isRequired,
 }
 
+/* Mapping to props */
 const mapDispatchToProps = dispatch => ({
   openSideBar() {
     dispatch( sidebarAction.open() );
   },
 });
 
-export default connect( null, mapDispatchToProps )( withStyles(styles, { withTheme: true })( Header ) );
+/* Exports */
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  connect( null, mapDispatchToProps )
+)( Header );

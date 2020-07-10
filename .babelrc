@@ -5,7 +5,14 @@
   ],
   "plugins": [
     [ "module-resolver", {
-        "root": [ "./src" ]
+        "root": [ "./src" ],
+        "alias": {
+          "@src": "./src",
+          "@reducers": "./src/reducers",
+          "@components": "./src/components",
+          "@theme": "./src/theme",
+          "@layouts": "./src/layouts"
+        }
       }
     ],
     [ "@babel/plugin-proposal-decorators", { "legacy": true } ],
