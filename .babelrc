@@ -11,7 +11,8 @@
           "@reducers": "./src/reducers",
           "@components": "./src/components",
           "@theme": "./src/theme",
-          "@layouts": "./src/layouts"
+          "@layouts": "./src/layouts",
+          "@graphql": "./src/graphql"
         }
       }
     ],

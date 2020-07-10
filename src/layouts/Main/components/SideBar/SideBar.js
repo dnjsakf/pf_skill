@@ -10,8 +10,7 @@ import sidebarAction from '@reducers/sidebar/actions';
 
 /* GraphQL */
 import { graphql } from "react-apollo";
-import { GET_SIDE_BAR_MENUS, mocks } from './graphql/queries';
-import { MockedProvider } from "@apollo/react-testing";
+import { GET_SIDE_BAR_MENUS } from '@graphql/SideBar/queries';
 
 /* Styled */
 import styled from 'styled-components';
@@ -94,9 +93,7 @@ class SideBar extends React.Component {
         <Container theme={ theme }>
           <Profile />
           <Divider className={ classes.divider } />
-          <MockedProvider mocks={ mocks } addTypename={ false }>
-            <SidebarNavWithQuery location={ location } />
-          </MockedProvider>
+          <SidebarNavWithQuery location={ location } />
         </Container>
       </Drawer>
     );

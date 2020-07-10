@@ -11,8 +11,10 @@ import { Provider as StoreProvider } from "react-redux";
 import rootReducer from "./reducers";
 
 /* GraphQL */
+import { MockedProvider } from '@apollo/react-testing';
 import { ApolloProvider } from "react-apollo";
 import client from "./graphql/client";
+import mocks from './graphql/mocks';
 
 /* Material-UI */
 import { ThemeProvider } from "@material-ui/styles";
@@ -37,9 +39,11 @@ function render(Component){
     <CircularSuspense>
       <StoreProvider store={ store }>
         <ApolloProvider client={ client }>
-          <ThemeProvider theme={ theme }>
-            <Component/>
-          </ThemeProvider>
+          <MockedProvider mocks={ mocks } addTypename={ false }>
+            <ThemeProvider theme={ theme }>
+              <Component/>
+            </ThemeProvider>
+          </MockedProvider>
         </ApolloProvider>
       </StoreProvider>
     </CircularSuspense>

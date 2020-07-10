@@ -1,51 +1,35 @@
-import React, { Component, Suspense } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+/* React */
+import React from 'react';
 
+/* Router */
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+
+/* Custom Components */
 import ErrorBoundary from './components/ErrorBoundary';
+import NotFound from './components/NotFound';
 
-/* Layouts */
+/* Layout Components */
 const RouteWithLayout = React.lazy(()=>import('./layouts/RouteWithLayout'));
 const MainLayout = React.lazy(()=>import('./layouts/Main'));
 
-/* Routes */
+/* Route Components */
 const Home = React.lazy(()=>import('./routes/Home'));
 const Skills = React.lazy(()=>import('./routes/Skills'));
 const Settings = React.lazy(()=>import('./routes/Settings'));
 
-const NotFound = ( props )=>{
-  const {
-    className
-  } = props;
-
-  return (
-    <div>
-      <h1>Page Not Found</h1>
-    </div>
-  )
-}
-
-/* Component */
-class App extends Component {
+/* Main Component */
+class App extends React.Component {
   constructor(props){
     super(props);
     
     this.state = {
-      toggle: this.props.toggle,
       hasError: false,
     };
-
-    this.handleToggle = this.handleToggle.bind(this);
   }
 
   /**
    *  Handlers
    **/
-  handleToggle( event ){
-    console.log("handleToggle", event);
-    this.setState((state, props)=>(Object.assign(state, {
-      toggle: !state.toggle
-    })));
-  }
 
   /**
    *  Life Cycle 
@@ -140,8 +124,9 @@ class App extends Component {
   }
 }
 
+/* Main Component Settings */
 App.defaultProps = {
-  toggle: false
 };
 
+/* Exports */
 export default App;

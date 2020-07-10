@@ -1,21 +1,6 @@
-import gql from 'graphql-tag';
+import { GET_SIDE_BAR_MENUS } from './queries';
 
-export const GET_SIDE_BAR_MENUS = gql(`
-  query getSideBarMenus{
-    sideBarMenus {
-      title
-      href
-      icon
-      subMenus {
-        title
-        href
-        icon
-      }
-    }
-  }
-`);
-
-export const mocks = [
+export default [
   {
     request: {
       query: GET_SIDE_BAR_MENUS,

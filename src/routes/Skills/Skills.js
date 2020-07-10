@@ -8,8 +8,11 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 /* Custom Components */
 import { CircularSuspense } from '@components/Suspense';
 
+import NotFound from '@components/NotFound';
+
 const SkillsMain = React.lazy(()=>(import('./components/SkillsMain')));
 const SkillsELK = React.lazy(()=>(import('./components/SkillsELK')));
+const SkillsETL = React.lazy(()=>(import('./components/SkillsETL')));
 
 /* Another Components */
 import styled from 'styled-components';
@@ -17,19 +20,6 @@ import styled from 'styled-components';
 /* Styled Components */
 const Container = styled.div`
 `;
-
-/* Sub Components */
-const NotFound = ( props )=>{
-  const {
-    className
-  } = props;
-
-  return (
-    <div>
-      <h1>Page Not Found</h1>
-    </div>
-  )
-}
 
 /* Main Component */
 class Skills extends React.Component {
@@ -55,6 +45,10 @@ class Skills extends React.Component {
           <Route
             path="/skills/elk"
             component={ SkillsELK }
+          />
+          <Route
+            path="/skills/etl"
+            component={ SkillsETL }
           />
           <Route
             path="/skills/notfound"

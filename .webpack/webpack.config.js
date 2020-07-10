@@ -14,8 +14,8 @@ module.exports = {
       path.join(__dirname, "../src/index.css"),
     ],
     vendor: [
-      "react", "react-dom", "apollo-client"
-    ]
+      "react", "react-dom", "react-router-dom", "apollo-client"
+    ],
   },
   output: {
     filename: "[name].bundle.js",
