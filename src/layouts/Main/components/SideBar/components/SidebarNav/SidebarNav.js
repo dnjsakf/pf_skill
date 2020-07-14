@@ -76,7 +76,7 @@ class SidebarNav extends React.Component {
           return (
             <SideBarNavItem 
               { ...options }
-              key={ options.title }
+              key={ options.name }
               isLast={ isLast }
             />
           )

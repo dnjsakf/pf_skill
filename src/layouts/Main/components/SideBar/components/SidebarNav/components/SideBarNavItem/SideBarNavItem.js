@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
 
 /* Material-UI */
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -96,7 +96,7 @@ const SideBarSubNavItem = ( props )=>{
   const classes = useStyles();
   const {
     className,
-    title,
+    name,
     href,
     icon,
     isLast,
@@ -106,7 +106,7 @@ const SideBarSubNavItem = ( props )=>{
   const Icon = loadIcon( icon );
   
   return (
-    <>
+    <React.Fragment>
       <ListItem
         className={
           clsx({
@@ -128,11 +128,11 @@ const SideBarSubNavItem = ( props )=>{
               </div>
             )
           }
-          { title }
+          { name }
         </Button>
       </ListItem>
       { !isLast && <Divider className={ classes.divider }/> }
-    </>
+    </React.Fragment>
   );
 }
 
@@ -162,7 +162,7 @@ const SideBarSubNav = ( props )=>{
           return (
             <SideBarSubNavItem 
               { ...options }
-              key={ options.title }
+              key={ options.name }
               isFirst={ isFirst }
               isLast={ isLast }
             />
@@ -179,7 +179,7 @@ const SideBarNavItem = ( props )=>{
   const classes = useStyles();
   const {
     className,
-    title,
+    name,
     href,
     icon,
     subMenus,
@@ -196,7 +196,7 @@ const SideBarNavItem = ( props )=>{
   const hasSubMenus = subMenus && subMenus.length > 0;
   
   return (
-    <>
+    <React.Fragment>
       <ListItem
         className={ classes.item }
         disableGutters
@@ -215,13 +215,22 @@ const SideBarNavItem = ( props )=>{
               </div>
             )
           }
-          { title }
+          { name }
         </Button>
-        { hasSubMenus && ( open ? <ExpandLess /> : <ExpandMore /> ) }
+        {
+          hasSubMenus && ( 
+            open 
+            ? <ExpandLess /> 
+            : <ExpandMore /> 
+          )
+        }
       </ListItem>
-      <SideBarSubNav open={ open } menus={ subMenus } />
+      <SideBarSubNav
+        open={ open }
+        menus={ subMenus }
+      />
       <Divider className={ classes.divider }/>
-    </>
+    </React.Fragment>
   );
 }
 

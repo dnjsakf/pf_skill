@@ -19,4 +19,4 @@ class SideBarMenuType(MongoengineObjectType):
   sub_menus = graphene.List(SideBarSubMenuType)
 
   def resolve_sub_menus(parent, info, **input):
-    return SideBarMenuModel.objects(parent=parent.title).all().order_by("+sort_order")
+    return SideBarMenuModel.objects(group=parent.name).all().order_by("+sort_order")

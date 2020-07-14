@@ -9,40 +9,40 @@ export default [
       data: {
         sideBarMenus: [
           {
-            title: "Home",
+            name: "Home",
             href: "/home",
             icon: "Image",
             subMenus: []
           },
           {
-            title: "기술 스택",
+            name: "기술 스택",
             href: "/skills",
             icon: "Code",
             subMenus: [
               {
-                title: "ELK",
+                name: "ELK",
                 href: "/skills/elk",
                 icon: "Code"
               },
               {
-                title: "ETL",
+                name: "ETL",
                 href: "/skills/etl",
                 icon: "Code" 
               },
               {
-                title: "Crawler",
+                name: "Crawler",
                 href: "/skills/crawler",
                 icon: "Code" 
               },
               {
-                title: "CELERY",
+                name: "CELERY",
                 href: "/skills/celery",
                 icon: "Code" 
               },
             ]
           },
           {
-            title: "Settings",
+            name: "Settings",
             href: "/settings",
             icon: "Settings",
             subMenus: []

@@ -5,8 +5,13 @@ import PropTypes from 'prop-types';
 /* Styled */
 import styled from 'styled-components';
 
+/* Sub Components */
+import { CircularSuspense } from '@components/Suspense';
+const MenuSettingForm = React.lazy(()=>import('./components/MenuSettingForm'));
+
 /* Styled Components */
 const Container = styled.div`
+  width: 300px;
   height: 100%;
 `;
 
@@ -24,9 +29,11 @@ class MenuSetting extends React.Component {
     } = this.props;
 
     return (
-      <Container>
-        <span>MenuSetting</span>
-      </Container>
+      <CircularSuspense>
+        <Container>
+          <MenuSettingForm />
+        </Container>
+      </CircularSuspense>
     );
   }
 }

@@ -7,9 +7,9 @@ class SideBarMenuModel(Document):
   }
   # no = fields.SequenceField(collection_name="sidebar_menu_mst")
   
-  parent = fields.StringField()
+  group = fields.StringField()
 
-  title = fields.StringField(required=True)
+  name = fields.StringField(required=True)
   href = fields.StringField(required=True)
   icon = fields.StringField()
 

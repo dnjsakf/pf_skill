@@ -3,11 +3,11 @@ import gql from 'graphql-tag';
 export const GET_SIDE_BAR_MENUS = gql(`
   query getSideBarMenus{
     sideBarMenus {
-      title
+      name
       href
       icon
       subMenus {
-        title
+        name
         href
         icon
       }

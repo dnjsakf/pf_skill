@@ -8,7 +8,7 @@ from .types import *
 # Schema 생성
 schema = graphene.Schema(
   query=Query,
-  # mutation=Mutation,
+  mutation=Mutation,
   types=[
     SideBarMenuType,
   ],
