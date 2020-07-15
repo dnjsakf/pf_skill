@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 /* Custom Components */
-import { CircularSuspense } from '@components/Suspense';
-
-import TabBar from './components/TabBar';
-import TabPanel from './components/TabPanel';
+import TabMenus from '@components/TabMenus';
 
 const MenuSetting = React.lazy(()=>( import('./components/MenuSetting') ));
 const ThemeSetting = React.lazy(()=>( import('./components/ThemeSetting') ));
@@ -20,72 +17,23 @@ const Container = styled.div`
 `;
 
 /* Main Component */
-class Settings extends React.Component {
-  constructor(props) {
-    super(props);
+const Settings = props => {
+  /* Props */
+  const {
+    tabs,
+    panels,
+    ...rest
+  } = props;
 
-    this.state = { 
-      value: 0
-    }
-    
-    this.handleChange = this.handleChange.bind(this);
-  }
-  
-  handleChange(event, newValue){
-    this.setState(
-      (state)=>(Object.assign(
-        state,
-        {
-          value: newValue
-        }
-      ))
-    );
-  }
-
-  render() {
-    const {
-      location,
-      tabs,
-      panels,
-      ...rest
-    } = this.props;
-    
-    const {
-      value
-    } = this.state;
-
-    return (
-      <Container>
-        <TabBar
-          tabs={ tabs }
-          value={ value }
-          onChange={ this.handleChange }
-        />
-        <CircularSuspense>
-        {
-          tabs && tabs.map(({ id }, index)=>{
-            const Component = panels[id];
-            
-            return (
-              <TabPanel
-                key={ id }
-                selected={ index === value }
-                id={ [id, "panel"].join("-") }
-                aria-labelledby={ [id, "tab"].join("-") }
-              >
-              {
-                Component 
-                ? <Component /> 
-                : "Not Found Tab Panel"
-              }
-              </TabPanel>
-            )
-          })
-        }
-        </CircularSuspense>
-      </Container>
-    );
-  }
+  /* Renderer */
+  return (
+    <Container>
+      <TabMenus 
+        tabs={ tabs }
+        panels={ panels }
+      />
+    </Container>
+  );
 }
 
 /* Main Component Settings */

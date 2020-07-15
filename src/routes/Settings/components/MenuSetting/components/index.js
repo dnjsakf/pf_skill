@@ -1,1 +1,1 @@
-export { default as MenuForm } from './MenuForm';
+export { default as MenuSettingForm } from './MenuSettingForm';

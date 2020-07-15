@@ -20,7 +20,6 @@ import clsx from 'clsx';
 /* Constants */
 const styles = theme => ({
   root: {
-    
   },
   sticky: {
     top: "unset",
@@ -93,4 +92,6 @@ SidebarNav.propTypes = {
 };
 
 /* Exports */
-export default withStyles( styles, { withTheme: true })( SidebarNav );
+export default compose(
+  withStyles( styles, { withTheme: true })
+)( SidebarNav );

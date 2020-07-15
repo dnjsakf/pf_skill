@@ -1,14 +1,14 @@
 import gql from 'graphql-tag';
 
 export const CREATE_SIDE_BAR_MENU = gql(`
-  mutation (
+  mutation createSideBarMenu (
     $group: String,
     $name: String!,
     $href: String!,
     $icon: String,
     $sortOrder: Int
   ) {
-    createSideBarMenu(
+    createSideBarMenu (
       group: $group,
       name: $name,
       href: $href,

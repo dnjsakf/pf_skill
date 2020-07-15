@@ -66,10 +66,6 @@ class SideBar extends React.Component {
     this.state = { }
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    return true;
-  }
-  
   render() {
     const {
       classes,

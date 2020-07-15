@@ -1,4 +1,5 @@
 import { GET_SIDE_BAR_MENUS } from './queries';
+import { CREATE_SIDE_BAR_MENU } from './mutations';
 
 export default [
   {
@@ -48,6 +49,24 @@ export default [
             subMenus: []
           }
         ]
+      }
+    }
+  },
+  {
+    request: {
+      query: CREATE_SIDE_BAR_MENU,
+      variables: {
+        group: "Settings",
+        name: "Mocked",
+        href: "/settings",
+        icon: "Settings",
+      }
+    },
+    result: {
+      data: {
+        createSideBarMenu: {
+          success: true,
+        },
       }
     }
   }

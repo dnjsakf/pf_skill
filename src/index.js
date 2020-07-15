@@ -20,6 +20,9 @@ import mocks from './graphql/mocks';
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./theme";
 
+/* Notistack */
+import { SnackbarProvider } from 'notistack';
+
 /* Common Component */
 import { CircularSuspense } from "./components/Suspense";
 
@@ -39,11 +42,18 @@ function render(Component){
     <CircularSuspense>
       <StoreProvider store={ store }>
         <ApolloProvider client={ client }>
-          {/* <MockedProvider mocks={ mocks } addTypename={ false }> */}
+          <MockedProvider mocks={ mocks } addTypename={ false }>
             <ThemeProvider theme={ theme }>
-              <Component/>
+              <SnackbarProvider 
+                maxSnack={3} 
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}>
+                <Component/>
+              </SnackbarProvider>
             </ThemeProvider>
-          {/* </MockedProvider>  */}
+          </MockedProvider>
         </ApolloProvider>
       </StoreProvider>
     </CircularSuspense>
