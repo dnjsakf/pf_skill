@@ -10,25 +10,22 @@ const Container = styled.div`
 `;
 
 /* Main Component */
-class SkillsELK extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {  }
-  }
-  render() { 
-    return ( 
-      <Container>
-        SkillsELK
-      </Container>
-    );
-  }
+const SkillsELK = props => {
+  /* Props */
+  const {
+    ...rest
+  } = props;
+  
+  /* Renderer */
+  return (
+    <Container>
+      SkillsELK
+    </Container>
+  );
 }
 
 /* Main Component Settings */
-SkillsELK.propTypes = {
-  
-}
+SkillsELK.propTypes = { }
 
 /* Exports */
 export default SkillsELK;

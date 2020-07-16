@@ -1,5 +1,5 @@
 /* React */
-import React, { forwardRef } from 'react';
+import React, { useState, useCallback, useEffect, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 /* Router */
@@ -14,32 +14,14 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
-import Code from '@material-ui/icons/Code';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ImageIcon from '@material-ui/icons/Image';
-import SettingsIcon from '@material-ui/icons/Settings';
-
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
+/* Custom Components */
+import { MappedIcon } from '@components/Icon';
+
 /* Another Modules */
 import clsx from 'clsx';
-
-/* Constants */
-const loadIcon = name => {
-  switch( name ){
-    case "Image":
-      return ImageIcon;
-    case "Settings":
-      return SettingsIcon;
-    case "Dashboard":
-      return DashboardIcon;
-    case "Code":
-      return Code;
-    default:
-      return null;
-  }
-}
 
 /* Styles Hook */
 const useStyles = makeStyles((theme)=>({
@@ -68,10 +50,10 @@ const useStyles = makeStyles((theme)=>({
     marginRight: theme.spacing(1)
   },
   active: {
-    color: theme.palette.primary.main,
+    color: theme.palette.error.main,
     fontWeight: theme.typography.fontWeightMedium,
     '& $icon': {
-      color: theme.palette.primary.main
+      color: theme.palette.error.main
     }
   },
   nested: {
@@ -82,7 +64,7 @@ const useStyles = makeStyles((theme)=>({
   },
 }));
 
-/* Sub Components */
+/* Sub Component */
 const CustomRouterLink = forwardRef((props, ref) => (
   <div
     ref={ref}
@@ -92,19 +74,30 @@ const CustomRouterLink = forwardRef((props, ref) => (
   </div>
 ));
 
-const SideBarSubNavItem = ( props )=>{
-  const classes = useStyles();
+/* Sub Component */
+const ExpandIcon = ({ isExpand, open }) => (
+  isExpand && (
+    open 
+    ? <ExpandLess /> 
+    : <ExpandMore /> 
+  )
+)
+
+/* Sub Component */
+const SideBarSubNavItem = props =>{
+  /* Props */
   const {
     className,
     name,
     href,
     icon,
-    isLast,
     ...rest
   } = props;
   
-  const Icon = loadIcon( icon );
+  /* Styles Hook */
+  const classes = useStyles();
   
+  /* Renderer */
   return (
     <React.Fragment>
       <ListItem
@@ -121,23 +114,20 @@ const SideBarSubNavItem = ( props )=>{
           component={ CustomRouterLink }
           to={ href }
         >
-          {
-            Icon && (
-              <div className={ classes.icon }>
-                <Icon />
-              </div>
-            )
-          }
+          <MappedIcon 
+            name={ icon }
+            className={ classes.icon }
+          />
           { name }
         </Button>
       </ListItem>
-      { !isLast && <Divider className={ classes.divider }/> }
     </React.Fragment>
   );
 }
 
-const SideBarSubNav = ( props )=>{
-  const classes = useStyles();
+/* Sub Component */
+const SideBarSubNav = props => {
+  /* Props */
   const {
     className,
     history,
@@ -146,37 +136,37 @@ const SideBarSubNav = ( props )=>{
     ...rest
   } = props;
   
+  /* Styles Hook */
+  const classes = useStyles();
+  
+  /* Renderer */
   if( !menus ){ return null; }
 
   return (
-    <Collapse 
-      in={ open } 
-      timeout="auto"
+    <List
+      component="div"
+      disablePadding
     >
-      <List component="div" disablePadding>
-      {
-        menus && menus.map(( options, idx )=>{
-          const isFirst = idx === 0;
-          const isLast = idx === menus.length - 1;
-          
-          return (
-            <SideBarSubNavItem 
-              { ...options }
-              key={ options.name }
-              isFirst={ isFirst }
-              isLast={ isLast }
-            />
-          );
-        })
-      }
-      </List>
-    </Collapse>
+    {
+      menus && menus.map(( options, idx )=>{
+        const isFirst = idx === 0;
+        const isLast = idx === menus.length - 1;
+        
+        return (
+          <React.Fragment key={ options.name }>
+            <SideBarSubNavItem { ...options } />
+            { !isLast && <Divider className={ classes.divider }/> }
+          </React.Fragment>
+        );
+      })
+    }
+    </List>
   );
 }
 
 /* Main Component */
-const SideBarNavItem = ( props )=>{
-  const classes = useStyles();
+const SideBarNavItem = props => {
+  /* Props */
   const {
     className,
     name,
@@ -185,16 +175,26 @@ const SideBarNavItem = ( props )=>{
     subMenus,
     ...rest
   } = props;
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  const Icon = loadIcon( icon );
-  const hasSubMenus = subMenus && subMenus.length > 0;
   
+  const isExpand = subMenus && subMenus.length > 0;
+
+  /* State */
+  const [open, setOpen] = useState( false );
+
+  /* Hooks */
+  const classes = useStyles();
+  
+  /* Handlers */
+  const handleClick = useCallback( event => {
+    setOpen(!open);
+  }, [ open ]);
+  
+  /* Side Effects */
+  useEffect(()=>{
+    console.log( open );
+  }, [ open ]);
+  
+  /* Renderer */
   return (
     <React.Fragment>
       <ListItem
@@ -208,28 +208,30 @@ const SideBarNavItem = ( props )=>{
           to={ href }
           onClick={ handleClick }
         >
-          {
-            Icon && (
-              <div className={ classes.icon }>
-                <Icon />
-              </div>
-            )
-          }
+          <MappedIcon 
+            name={ icon }
+            className={ classes.icon }
+          />
           { name }
         </Button>
-        {
-          hasSubMenus && ( 
-            open 
-            ? <ExpandLess /> 
-            : <ExpandMore /> 
-          )
-        }
+        <ExpandIcon
+          isExpand={ isExpand }
+          open={ open }
+        />
       </ListItem>
-      <SideBarSubNav
-        open={ open }
-        menus={ subMenus }
-      />
-      <Divider className={ classes.divider }/>
+      {
+        isExpand && (
+          <Collapse 
+            in={ open } 
+            timeout="auto"
+          >
+            <SideBarSubNav
+              open={ open }
+              menus={ subMenus }
+            />
+          </Collapse>
+        )
+      }
     </React.Fragment>
   );
 }

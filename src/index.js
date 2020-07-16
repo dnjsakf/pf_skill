@@ -42,6 +42,7 @@ function render(Component){
     <CircularSuspense>
       <StoreProvider store={ store }>
         <ApolloProvider client={ client }>
+          {/* <MockedProvider mocks={ mocks } addTypename={ false }> */}
           <MockedProvider mocks={ mocks } addTypename={ false }>
             <ThemeProvider theme={ theme }>
               <SnackbarProvider 
@@ -54,6 +55,7 @@ function render(Component){
               </SnackbarProvider>
             </ThemeProvider>
           </MockedProvider>
+          {/* </MockedProvider> */}
         </ApolloProvider>
       </StoreProvider>
     </CircularSuspense>

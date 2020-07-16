@@ -10,25 +10,22 @@ const Container = styled.div`
 `;
 
 /* Main Component */
-class SkillsMain extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {  }
-  }
-  render() { 
-    return ( 
-      <Container>
-        SkillsMain
-      </Container>
-    );
-  }
+const SkillsMain = props => {
+  /* Props */
+  const {
+    ...rest
+  } = props;
+  
+  /* Renderer */
+  return (
+    <Container>
+      SkillsMain
+    </Container>
+  );
 }
 
 /* Main Component Settings */
-SkillsMain.propTypes = {
-  
-}
+SkillsMain.propTypes = { }
 
 /* Exports */
 export default SkillsMain;

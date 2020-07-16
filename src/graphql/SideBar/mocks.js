@@ -60,7 +60,7 @@ export default [
         name: "Mocked",
         href: "/settings",
         icon: "Settings",
-      }
+      },
     },
     result: {
       data: {

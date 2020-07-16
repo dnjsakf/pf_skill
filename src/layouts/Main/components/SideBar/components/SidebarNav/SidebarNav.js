@@ -2,96 +2,107 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/* Redux */
-import { compose } from 'redux';
+/* Router */
+import { useLocation } from 'react-router';
 
-/* Material-UI */
-import { withStyles } from '@material-ui/styles';
+/* GraphQL */
+import { useQuery } from "react-apollo";
+import { GET_SIDE_BAR_MENUS } from '@graphql/SideBar/queries';
+
+/* Material UI */
+import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import Divider from '@material-ui/core/Divider';
 
 /* Custom Components */
-import SideBarNavItem from './components/SideBarNavItem';
 import CircularProgress from '@components/Progress/CircularProgress';
+import SideBarNavItem from './components/SideBarNavItem';
 
 /* Another Modules */
 import clsx from 'clsx';
 
-/* Constants */
-const styles = theme => ({
+/* Styles Hook */
+const useStyles = makeStyles( theme => ({
   root: {
   },
   sticky: {
     top: "unset",
-  }
-});
+  },
+  divider: {
+    margin: theme.spacing(1, 0)
+  },
+}));
 
 /* Main Component */
-class SidebarNav extends React.Component {
-  constructor(props){
-    super(props);
-    
-    this.state = { }
-  }
+const SideBarNav = props => {
+  /* Props */
+  const {
+    className,
+    ...rest
+  } = props;
   
-  render(){
-    const {
-      classes,
-      className,
-      data,
-      ...rest
-    } = this.props;
-    
-    if ( loading ) return ( <CircularProgress /> );
-    if ( error ) return `Error! ${error.message}`;
-    
-    const {
-      loading,
-      sideBarMenus,
-      error,
-    } = data;
-
-    return (
-      <List
-        {...rest}
-        className={ clsx( classes.root, className )}
-        aria-labelledby="nested-sidebar-menu"
-        subheader={
-          <ListSubheader 
-            component="div"
-            id="nested-sidebar-menu"
-            classes={{
-              sticky: classes.sticky
-            }}
-          >
-            <span>{ this.props.location.pathname }</span>
-          </ListSubheader>
-        }
-      >
-      {
-        sideBarMenus && sideBarMenus.map(( options, idx )=>{
-          const isLast = idx === sideBarMenus.length - 1;
-          
-          return (
-            <SideBarNavItem 
-              { ...options }
-              key={ options.name }
-              isLast={ isLast }
-            />
-          )
-        })
+  /* Hooks */
+  /* Styles Hook */
+  const classes = useStyles();
+  
+  /* Router Hook */
+  const location = useLocation();
+  
+  /* GraphQL Hook */
+  const { loading, error, data, fetchMore, refetch } = useQuery(
+    GET_SIDE_BAR_MENUS, {
+      //fetchPolicy: "cache-and-network",
+      onError(error){
+        console.error( error );
+      },
+      onCompleted( completed ){
+        console.log('[COMPLETED]', completed);
       }
-      </List>
-    );
-  }
+    }
+  );
+  
+  /* Renderer */
+  if ( loading ) return ( <CircularProgress /> );
+  if ( error ) return ( `Error! ${error.message}` );
+  
+  const { sideBarMenus } = data;
+  
+  return (
+    <List
+      {...rest}
+      className={ clsx( classes.root, className )}
+      aria-labelledby="nested-sidebar-menu"
+      subheader={
+        <ListSubheader 
+          component="div"
+          id="nested-sidebar-menu"
+          classes={{
+            sticky: classes.sticky
+          }}
+        >
+          <span>{ location.pathname }</span>
+        </ListSubheader>
+      }
+    >
+    {
+      sideBarMenus && sideBarMenus.map(( info, idx )=>{
+        return (
+          <React.Fragment key={ info.name }>
+            <SideBarNavItem { ...info } />          
+            <Divider className={ classes.divider }/>
+          </React.Fragment>
+        )
+      })
+    }
+    </List>
+  );  
 }
 
 /* Main Component Settings */
-SidebarNav.propTypes = {
+SideBarNav.propTypes = {
   className: PropTypes.string,
 };
 
 /* Exports */
-export default compose(
-  withStyles( styles, { withTheme: true })
-)( SidebarNav );
+export default SideBarNav;

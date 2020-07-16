@@ -31,6 +31,9 @@ const useStyles = makeStyles( theme => ({
   divider: {
     margin: theme.spacing(1, 0)
   },
+  labelPlacementStart: {
+    margin: 'unset'
+  }
 }));
 
 /* Main Component */
@@ -114,7 +117,8 @@ const MenuSettingForm = props => {
             }
             labelPlacement="start"
             classes={{
-              label: classes.label
+              label: classes.label,
+              labelPlacementStart: classes.labelPlacementStart
             }}
           />
           <Divider className={ classes.divider }/>
@@ -136,7 +140,8 @@ const MenuSettingForm = props => {
             }
             labelPlacement="start"
             classes={{
-              label: classes.label
+              label: classes.label,
+              labelPlacementStart: classes.labelPlacementStart
             }}
           />
           <Divider className={ classes.divider }/>
@@ -158,7 +163,8 @@ const MenuSettingForm = props => {
             }
             labelPlacement="start"
             classes={{
-              label: classes.label
+              label: classes.label,
+              labelPlacementStart: classes.labelPlacementStart
             }}
           />
           <Divider className={ classes.divider }/>
@@ -180,7 +186,8 @@ const MenuSettingForm = props => {
             }
             labelPlacement="start"
             classes={{
-              label: classes.label
+              label: classes.label,
+              labelPlacementStart: classes.labelPlacementStart
             }}
           />
           <Divider className={ classes.divider }/>

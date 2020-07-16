@@ -10,25 +10,22 @@ const Container = styled.div`
 `;
 
 /* Main Component */
-class SkillsETL extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {  }
-  }
-  render() { 
-    return ( 
-      <Container>
-        SkillsETL
-      </Container>
-    );
-  }
+const SkillsETL = props => {
+  /* Props */
+  const {
+    ...rest
+  } = props;
+  
+  /* Renderer */
+  return (
+    <Container>
+      SkillsETL
+    </Container>
+  );
 }
 
 /* Main Component Settings */
-SkillsETL.propTypes = {
-  
-}
+SkillsETL.propTypes = { }
 
 /* Exports */
 export default SkillsETL;

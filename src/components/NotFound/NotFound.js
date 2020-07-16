@@ -3,11 +3,12 @@ import React from 'react';
 
 /* Main Component */
 const NotFound = props => {
+  /* Props */
   const {
-    className,
     ...rest
   } = props;
 
+  /* Renderer */
   return (
     <div>
       <h1>Not Found Page</h1>

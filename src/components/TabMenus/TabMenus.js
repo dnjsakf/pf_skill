@@ -43,24 +43,20 @@ const TabMenus = props => {
       />
       <CircularSuspense>
       {
-        tabs && tabs.map(({ id }, index)=>{
-          const Component = panels[id];
-          
-          return (
-            <TabPanel
-              key={ id }
-              selected={ index === value }
-              id={ [id, "panel"].join("-") }
-              aria-labelledby={ [id, "tab"].join("-") }
-            >
-            {
-              Component 
-              ? <Component /> 
-              : "Not Found Tab Panel"
-            }
-            </TabPanel>
-          )
-        })
+        tabs && tabs.map(({ id, component: Component }, index)=>(
+          <TabPanel
+            key={ id }
+            selected={ index === value }
+            id={ [id, "panel"].join("-") }
+            aria-labelledby={ [id, "tab"].join("-") }
+          >
+          {
+            Component 
+            ? <Component /> 
+            : "Not Found Tab Panel"
+          }
+          </TabPanel>
+        ))
       }
       </CircularSuspense>
     </Container>
@@ -69,8 +65,7 @@ const TabMenus = props => {
 
 /* Main Component Settings */
 TabMenus.protoTypes = {
-  tabs: PropTypes.array,
-  panels: PropTypes.array
+  tabs: PropTypes.array
 }
 
 /* Exports */

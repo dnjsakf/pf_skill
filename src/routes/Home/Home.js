@@ -10,24 +10,22 @@ const Container = styled.div`
 `;
 
 /* Main Component */
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {  }
-  }
-  render() { 
-    return ( 
-      <Container>
-        Section
-      </Container>
-    );
-  }
+const Home = props => {
+  /* Props */
+  const {
+    ...rest
+  } = props;
+  
+  /* Renderer */
+  return (
+    <Container>
+      Section
+    </Container>
+  );
 }
 
 /* Main Component Settings */
 Home.propTypes = {
-  
 }
  
 /* Exports */

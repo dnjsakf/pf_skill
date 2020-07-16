@@ -47,21 +47,19 @@ Settings.defaultProps = {
     {
       id: "menu-settings",
       label: "메뉴설정",
+      component: MenuSetting,
     },
     {
       id: "theme-settings",
       label: "테마설정",
+      component: ThemeSetting,
     },
     {
       id: "auth-settings",
       label: "권한설정",
+      component: MenuSetting,
     }
-  ],
-  panels: {
-    "menu-settings": MenuSetting,
-    "theme-settings": ThemeSetting,
-    "auth-settings": MenuSetting,
-  }
+  ]
 };
 
 /* Exports */
