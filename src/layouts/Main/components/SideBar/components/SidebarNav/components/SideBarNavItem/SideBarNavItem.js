@@ -191,7 +191,7 @@ const SideBarNavItem = props => {
   
   /* Side Effects */
   useEffect(()=>{
-    console.log( open );
+    //console.log( open );
   }, [ open ]);
   
   /* Renderer */

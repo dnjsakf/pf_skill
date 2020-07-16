@@ -12,7 +12,8 @@
           "@components": "./src/components",
           "@theme": "./src/theme",
           "@layouts": "./src/layouts",
-          "@graphql": "./src/graphql"
+          "@graphql": "./src/graphql",
+          "@routes": "./src/routes"
         }
       }
     ],

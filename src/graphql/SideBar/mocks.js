@@ -10,7 +10,7 @@ export default [
       data: {
         sideBarMenus: [
           {
-            name: "Home",
+            name: "홈",
             href: "/home",
             icon: "Image",
             subMenus: []
@@ -38,12 +38,12 @@ export default [
               {
                 name: "CELERY",
                 href: "/skills/celery",
-                icon: "Code" 
+                icon: "Code"
               },
             ]
           },
           {
-            name: "Settings",
+            name: "설정",
             href: "/settings",
             icon: "Settings",
             subMenus: []

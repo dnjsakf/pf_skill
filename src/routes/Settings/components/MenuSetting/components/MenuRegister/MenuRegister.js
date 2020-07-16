@@ -37,7 +37,7 @@ const useStyles = makeStyles( theme => ({
 }));
 
 /* Main Component */
-const MenuSettingForm = props => {
+const MenuRegister = props => {
   /* Props */
   const {
     ...rest
@@ -207,8 +207,8 @@ const MenuSettingForm = props => {
 }
 
 /* Main Component Settings */
-MenuSettingForm.propTypes = {}
-MenuSettingForm.defaultProps = {}
+MenuRegister.propTypes = {}
+MenuRegister.defaultProps = {}
 
 /* Exports */
-export default MenuSettingForm;
+export default MenuRegister;

@@ -5,17 +5,18 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 
 /* Custom Components */
-import ErrorBoundary from './components/ErrorBoundary';
-import NotFound from './components/NotFound';
+import ErrorBoundary from '@components/ErrorBoundary';
+import NotFound from '@components/NotFound';
 
 /* Layout Components */
-const RouteWithLayout = React.lazy(()=>import('./layouts/RouteWithLayout'));
-const MainLayout = React.lazy(()=>import('./layouts/Main'));
+import RouteWithLayout from '@layouts/RouteWithLayout';
+
+const MainLayout = React.lazy(()=>import('@layouts/Main'));
 
 /* Route Components */
-const Home = React.lazy(()=>import('./routes/Home'));
-const Skills = React.lazy(()=>import('./routes/Skills'));
-const Settings = React.lazy(()=>import('./routes/Settings'));
+const Home = React.lazy(()=>import('@routes/Home'));
+const Skills = React.lazy(()=>import('@routes/Skills'));
+const Settings = React.lazy(()=>import('@routes/Settings'));
 
 /* Main Component */
 const App = props => {

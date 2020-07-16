@@ -49,7 +49,7 @@ const SideBarNav = props => {
   /* Router Hook */
   const location = useLocation();
   
-  /* GraphQL Hook */
+  /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
     GET_SIDE_BAR_MENUS, {
       //fetchPolicy: "cache-and-network",

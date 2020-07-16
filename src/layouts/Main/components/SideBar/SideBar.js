@@ -49,10 +49,8 @@ const Container = styled.div`
 const SideBar = props => {
   /* Props */
   const {
-    location,
     className,
     variant,
-    onClose,
     ...rest
   } = props;
   
@@ -82,7 +80,7 @@ const SideBar = props => {
       <Container theme={ MyTheme }>
         <Profile />
         <Divider className={ classes.divider } />
-        <SidebarNav location={ location } />
+        <SidebarNav />
       </Container>
     </Drawer>
   );

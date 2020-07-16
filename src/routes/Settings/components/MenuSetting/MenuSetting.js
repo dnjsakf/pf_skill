@@ -5,6 +5,10 @@ import PropTypes from 'prop-types';
 /* Styled */
 import styled from 'styled-components';
 
+/* Apollo */
+import { useQuery } from 'react-apollo';
+import { GET_SIDE_BAR_MENUS } from '@graphql/SideBar/queries';
+
 /* Material-UI */
 import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
@@ -12,7 +16,12 @@ import Paper from '@material-ui/core/Paper';
 /* Custom Components */
 import { CircularSuspense } from '@components/Suspense';
 import { GridContainer, GridItem } from '@components/Grid';
-const MenuSettingForm = React.lazy(()=>import('./components/MenuSettingForm'));
+
+/* Another Components */
+import clsx from 'clsx';
+
+const MenuRegister = React.lazy(()=>import('./components/MenuRegister'));
+const MenuTreeView = React.lazy(()=>import('./components/MenuTreeView'));
 
 /* Styled Components */
 const Container = styled.div`
@@ -30,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
-  leftPanel: {
-    height: "100%",
-  }
 }));
 
 /* Main Component */
@@ -45,18 +51,45 @@ const MenuSetting = props => {
   /* Styles Hook */
   const classes = useStyles();
   
+  /* Apollo Hook */
+  const { loading, error, data, fetchMore, refetch } = useQuery(
+    GET_SIDE_BAR_MENUS, {
+      //fetchPolicy: "cache-and-network",
+      onError(error){
+        console.error( error );
+      },
+      onCompleted( completed ){
+        console.log('[COMPLETED]', completed);
+      }
+    }
+  );
+  
+  /* Renderer */
+  if ( loading ) return ( <CircularProgress /> );
+  if ( error ) return ( `Error! ${error.message}` );
+  
+  const { sideBarMenus } = data;
+  
   /* Renderer */
   return (
     <CircularSuspense>
-      <GridContainer spacing={1}>
-        <GridItem>          
-          <Paper className={ classes.paper }>
-            
+      <GridContainer spacing={ 1 }>
+        <GridItem sm={ 2 }>
+          <Paper className={ 
+            clsx({
+              [classes.paper]: true,
+            })
+          }>
+            <MenuTreeView items={ sideBarMenus } />
           </Paper>        
         </GridItem>
         <GridItem>
-          <Paper className={ classes.paper }>
-            <MenuSettingForm />
+          <Paper className={ 
+            clsx({
+              [classes.paper]: true,
+            })
+          }>
+            <MenuRegister />
           </Paper>
         </GridItem>
       </GridContainer>
