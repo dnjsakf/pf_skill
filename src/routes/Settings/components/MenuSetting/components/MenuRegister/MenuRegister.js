@@ -1,6 +1,10 @@
 /* React */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+
+/* Redux */
+import { useSelector } from 'react-redux';
+import * as selectors from 'reducers/settings/menu/selectors';
 
 /* Apollo */
 import { useMutation } from 'react-apollo';
@@ -36,25 +40,35 @@ const useStyles = makeStyles( theme => ({
   }
 }));
 
+const initFormData = {
+  group: "",
+  name: "",
+  label: "",
+  href: "",
+  icon: "",
+}
+
 /* Main Component */
 const MenuRegister = props => {
   /* Props */
   const {
+    initData,
     ...rest
   } = props;
 
   /* State */
-  const [ variables, setVariables ] = useState({
-    group: "Settings",
-    name: "Mocked",
-    href: "/settings",
-    icon: "Settings",
-  });
-  
-  /* Another Hooks */
+  const [ variables, setVariables ] = useState( initData );
+
+  /* Redux Hook: Selector */
+  const selected = useSelector( selectors.getMenu );
+
+  /* Styles Hook */
   const classes = useStyles();
+
+  /* SnackBar Hook */
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   
+  /* Apollo Hook: Mutation */
   const [ mutate, { error, loading, data } ] = useMutation(
     CREATE_SIDE_BAR_MENU, {
       onError( error ){
@@ -77,6 +91,7 @@ const MenuRegister = props => {
     }
   );
 
+  /* Handlers */
   const handleChange = useCallback( event => {
     setVariables({
       ...variables,
@@ -90,6 +105,14 @@ const MenuRegister = props => {
     })
   }, [ mutate, variables ]);
 
+  /* Side Effects */
+  useEffect(()=>{
+    setVariables( selected );
+
+    console.log( selected );
+  }, [ selected ]);
+
+  /* Renderer */
   if( loading ) return ( <CircularProgress /> );
 
   return (
@@ -100,7 +123,7 @@ const MenuRegister = props => {
       >
         <FormGroup row={ false }>
           <FormControlLabel
-            label="메뉴 그룹명"
+            label="그룹명"
             control={
               <TextField
                 id="menu-group-name"
@@ -136,6 +159,29 @@ const MenuRegister = props => {
                 }}
                 onChange={ handleChange }
                 value={ variables.name }
+              />
+            }
+            labelPlacement="start"
+            classes={{
+              label: classes.label,
+              labelPlacementStart: classes.labelPlacementStart
+            }}
+          />
+          <Divider className={ classes.divider }/>
+          <FormControlLabel
+            label="라벨"
+            control={
+              <TextField
+                id="menu-label"
+                name="label"
+                variant="outlined"
+                InputProps={{
+                  classes: {
+                    input: classes.input
+                  }
+                }}
+                onChange={ handleChange }
+                value={ variables.label }
               />
             }
             labelPlacement="start"
@@ -207,8 +253,12 @@ const MenuRegister = props => {
 }
 
 /* Main Component Settings */
-MenuRegister.propTypes = {}
-MenuRegister.defaultProps = {}
+MenuRegister.propTypes = {
+  initData: PropTypes.object,
+}
+MenuRegister.defaultProps = {
+  initData: initFormData
+}
 
 /* Exports */
 export default MenuRegister;

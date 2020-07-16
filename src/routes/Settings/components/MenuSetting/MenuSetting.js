@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 
 /* Custom Components */
+import { CircularProgress } from '@components/Progress';
 import { CircularSuspense } from '@components/Suspense';
 import { GridContainer, GridItem } from '@components/Grid';
 
@@ -50,7 +51,7 @@ const MenuSetting = props => {
   
   /* Styles Hook */
   const classes = useStyles();
-  
+
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
     GET_SIDE_BAR_MENUS, {
@@ -74,7 +75,7 @@ const MenuSetting = props => {
   return (
     <CircularSuspense>
       <GridContainer spacing={ 1 }>
-        <GridItem sm={ 2 }>
+        <GridItem sm={ 3 }>
           <Paper className={ 
             clsx({
               [classes.paper]: true,

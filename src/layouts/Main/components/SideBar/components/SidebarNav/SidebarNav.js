@@ -88,8 +88,8 @@ const SideBarNav = props => {
     {
       sideBarMenus && sideBarMenus.map(( info, idx )=>{
         return (
-          <React.Fragment key={ info.name }>
-            <SideBarNavItem { ...info } />          
+          <React.Fragment key={ info._id }>
+            <SideBarNavItem info={ info } />
             <Divider className={ classes.divider }/>
           </React.Fragment>
         )

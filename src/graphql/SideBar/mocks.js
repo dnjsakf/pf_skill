@@ -10,40 +10,61 @@ export default [
       data: {
         sideBarMenus: [
           {
-            name: "홈",
+            _id: "1",
+            group: "",
+            name: "Home",
+            label: "홈",
             href: "/home",
             icon: "Image",
             subMenus: []
           },
           {
-            name: "기술 스택",
+            _id: "2",
+            group: "",
+            name: "Skills",
+            label: "기술 스택",
             href: "/skills",
             icon: "Code",
             subMenus: [
               {
+                _id: "1",
+                group: "Skills",
                 name: "ELK",
+                label: "ELK 스택",
                 href: "/skills/elk",
                 icon: "Code"
               },
               {
+                _id: "2",
+                group: "Skills",
                 name: "ETL",
+                label: "ETL",
                 href: "/skills/etl",
                 icon: "Code" 
               },
               {
+                _id: "3",
+                group: "Skills",
                 name: "Crawler",
+                label: "크롤링",
                 href: "/skills/crawler",
                 icon: "Code" 
               },
               {
+                _id: "4",
+                group: "Skills",
                 name: "CELERY",
+                label: "CELERY",
                 href: "/skills/celery",
                 icon: "Code"
               },
             ]
           },
           {
-            name: "설정",
+            _id: "3",
+            group: "",
+            name: "Settings",
+            label: "설정",
             href: "/settings",
             icon: "Settings",
             subMenus: []

@@ -88,9 +88,7 @@ const SideBarSubNavItem = props =>{
   /* Props */
   const {
     className,
-    name,
-    href,
-    icon,
+    info,
     ...rest
   } = props;
   
@@ -112,13 +110,13 @@ const SideBarSubNavItem = props =>{
           activeClassName={ classes.active }
           className={ classes.button }
           component={ CustomRouterLink }
-          to={ href }
+          to={ info.href }
         >
           <MappedIcon 
-            name={ icon }
+            name={ info.icon }
             className={ classes.icon }
           />
-          { name }
+          { info.label }
         </Button>
       </ListItem>
     </React.Fragment>
@@ -148,13 +146,13 @@ const SideBarSubNav = props => {
       disablePadding
     >
     {
-      menus && menus.map(( options, idx )=>{
+      menus && menus.map(( info, idx )=>{
         const isFirst = idx === 0;
         const isLast = idx === menus.length - 1;
         
         return (
-          <React.Fragment key={ options.name }>
-            <SideBarSubNavItem { ...options } />
+          <React.Fragment key={ info._id }>
+            <SideBarSubNavItem info={ info } />
             { !isLast && <Divider className={ classes.divider }/> }
           </React.Fragment>
         );
@@ -169,14 +167,11 @@ const SideBarNavItem = props => {
   /* Props */
   const {
     className,
-    name,
-    href,
-    icon,
-    subMenus,
+    info,
     ...rest
   } = props;
   
-  const isExpand = subMenus && subMenus.length > 0;
+  const isExpand = info.subMenus && info.subMenus.length > 0;
 
   /* State */
   const [open, setOpen] = useState( false );
@@ -205,14 +200,14 @@ const SideBarNavItem = props => {
           activeClassName={ classes.active }
           className={ classes.button }
           component={ CustomRouterLink }
-          to={ href }
+          to={ info.href }
           onClick={ handleClick }
         >
           <MappedIcon 
-            name={ icon }
+            name={ info.icon }
             className={ classes.icon }
           />
-          { name }
+          { info.label }
         </Button>
         <ExpandIcon
           isExpand={ isExpand }
@@ -227,7 +222,7 @@ const SideBarNavItem = props => {
           >
             <SideBarSubNav
               open={ open }
-              menus={ subMenus }
+              menus={ info.subMenus }
             />
           </Collapse>
         )

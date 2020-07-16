@@ -2,6 +2,11 @@
 import React, { useState, useCallback, useEffect, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
+/* Redux */
+import { useSelector, useDispatch } from 'react-redux';
+import * as selectors from 'reducers/settings/menu/selectors';
+import actions from 'reducers/settings/menu/actions';
+
 /* Material-UI */
 import { makeStyles } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
@@ -42,8 +47,11 @@ const useStyles = makeStyles((theme)=>({
     fontWeight: theme.typography.fontWeightMedium,
   },
   nested: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
   },
+  divider: {
+    margin: "2px 0",
+  }
 }));
 
 /* Sub Component */
@@ -57,27 +65,36 @@ const ExpandIcon = ({ isExpand, open }) => (
   : null
 )
 
+/* Sub Component */
 const MenuTreeItem = props => {
   /* Props */
   const {
     item,
     depth,
+    onClick,
     ...rest
   } = props;
-  
-  const isExpand = item.subMenus && item.subMenus.length > 0;
 
   /* State */
   const [open, setOpen] = useState( false );
   
   /* Styles Hook */
   const classes = useStyles();
+
+  /* Redux Hook */
+  const selected = useSelector( selectors.getMenu );
   
   /* Handlers */
   const handleClick = useCallback( event => {
     setOpen(!open);
+
+    onClick( item );
   }, [ open ]);
-  
+
+  /* Renderer */
+  const isExpand = item.subMenus && item.subMenus.length > 0;
+  const active = selected.name === item.name ;
+
   return (
     <React.Fragment>
       <ListItem
@@ -90,13 +107,19 @@ const MenuTreeItem = props => {
         }
       >
         <Button
-          className={ classes.button }
+          className={ 
+            clsx({
+              [classes.button]: true,
+              [classes.active]: active,
+            })
+          }
           onClick={ handleClick }
         >
-          { item.name }
+          { item.label }
         </Button>
         <ExpandIcon isExpand={ isExpand } open={ open } />
       </ListItem>
+      <Divider className={ classes.divider } />
       { 
         isExpand && (
           <Collapse in={ open } timeout="auto" >
@@ -111,7 +134,7 @@ const MenuTreeItem = props => {
   )
 }
 
-
+/* Main Component */
 const MenuTreeView = props => {
   /* Props */
   const {
@@ -122,6 +145,14 @@ const MenuTreeView = props => {
   
   /* Styles Hook */
   const classes = useStyles();
+
+  /* Redux Hook */
+  const dispatch = useDispatch();
+
+  /* Dispatchers */
+  const handleClick = useCallback( data => {
+    dispatch( actions.setMenu( data ) );
+  }, [ dispatch ]);
   
   /* Renderer */
   return (
@@ -132,10 +163,11 @@ const MenuTreeView = props => {
       {
         items && items.map(( item, index )=>(
           <MenuTreeItem 
-            key={ item.group+item.name+index } 
+            key={ item._id } 
             item={ item } 
             classes={ classes }
             depth={ depth }
+            onClick={ handleClick }
           />
         ))
       }
