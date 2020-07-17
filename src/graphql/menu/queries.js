@@ -1,16 +1,16 @@
 import gql from 'graphql-tag';
 
-export const GET_SIDE_BAR_MENUS = gql(`
-  query getSideBarMenus{
-    sideBarMenus {
-      _id
+export const GET_MENU_LIST = gql(`
+  query getMenuList{
+    items: menuList {
+      id
       group
       name
       label
       href
       icon
-      subMenus {
-        _id
+      subItems: subMenuList {
+        id
         group
         name
         label

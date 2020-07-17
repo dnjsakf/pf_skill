@@ -1,11 +1,6 @@
 /* React */
-import React, { useState, useCallback, useEffect, forwardRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-
-/* Redux */
-import { useSelector, useDispatch } from 'react-redux';
-import * as selectors from 'reducers/settings/menu/selectors';
-import actions from 'reducers/settings/menu/actions';
 
 /* Material-UI */
 import { makeStyles } from '@material-ui/styles';
@@ -21,6 +16,9 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 /* Another Modules */
 import clsx from 'clsx';
+
+/* Custom Components */
+import { MappedIcon } from '@components/Icon';
 
 /* Styles Hook */
 const useStyles = makeStyles((theme)=>({
@@ -42,9 +40,20 @@ const useStyles = makeStyles((theme)=>({
     width: '100%',
     fontWeight: theme.typography.fontWeightMedium
   },
+  icon: {
+    color: theme.palette.icon,
+    width: 24,
+    height: 24,
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: theme.spacing(1)
+  },
   active: {
     color: theme.palette.error.main,
     fontWeight: theme.typography.fontWeightMedium,
+    '& $icon': {
+      color: theme.palette.error.main
+    }
   },
   nested: {
     paddingLeft: theme.spacing(2),
@@ -66,11 +75,13 @@ const ExpandIcon = ({ isExpand, open }) => (
 )
 
 /* Sub Component */
-const MenuTreeItem = props => {
+const BaseTreeItem = props => {
   /* Props */
   const {
+    classes,
     item,
     depth,
+    selected,
     onClick,
     ...rest
   } = props;
@@ -78,22 +89,18 @@ const MenuTreeItem = props => {
   /* State */
   const [open, setOpen] = useState( false );
   
-  /* Styles Hook */
-  const classes = useStyles();
-
-  /* Redux Hook */
-  const selected = useSelector( selectors.getMenu );
-  
   /* Handlers */
   const handleClick = useCallback( event => {
+    event.preventDefault();
+    
     setOpen(!open);
-
-    onClick( item );
+    
+    onClick && onClick( item );
   }, [ open ]);
 
   /* Renderer */
-  const isExpand = item.subMenus && item.subMenus.length > 0;
-  const active = selected.name === item.name ;
+  const isExpand = item.subItems && item.subItems.length > 0;
+  const active = selected && ( selected.id === item.id );
 
   return (
     <React.Fragment>
@@ -115,6 +122,10 @@ const MenuTreeItem = props => {
           }
           onClick={ handleClick }
         >
+          <MappedIcon 
+            name={ item.icon }
+            className={ classes.icon }
+          />
           { item.label }
         </Button>
         <ExpandIcon isExpand={ isExpand } open={ open } />
@@ -123,9 +134,12 @@ const MenuTreeItem = props => {
       { 
         isExpand && (
           <Collapse in={ open } timeout="auto" >
-            <MenuTreeView
-              items={ item.subMenus }
+            <BaseTreeView
+              classes={ classes }
+              items={ item.subItems }
               depth={ depth+1 }
+              selected={ selected }
+              onClick={ onClick }
             />
           </Collapse>
         )
@@ -135,24 +149,18 @@ const MenuTreeItem = props => {
 }
 
 /* Main Component */
-const MenuTreeView = props => {
+const BaseTreeView = props => {
   /* Props */
   const {
     items,
     depth,
+    selected,
+    onClick,
     ...rest
   } = props;
   
   /* Styles Hook */
   const classes = useStyles();
-
-  /* Redux Hook */
-  const dispatch = useDispatch();
-
-  /* Dispatchers */
-  const handleClick = useCallback( data => {
-    dispatch( actions.setMenu( data ) );
-  }, [ dispatch ]);
   
   /* Renderer */
   return (
@@ -162,12 +170,13 @@ const MenuTreeView = props => {
     >
       {
         items && items.map(( item, index )=>(
-          <MenuTreeItem 
-            key={ item._id } 
-            item={ item } 
+          <BaseTreeItem 
+            key={ item.id }
             classes={ classes }
+            item={ item }
             depth={ depth }
-            onClick={ handleClick }
+            selected={ selected }
+            onClick={ onClick }
           />
         ))
       }
@@ -176,13 +185,15 @@ const MenuTreeView = props => {
 }
 
 /* Main Component Settings */
-MenuTreeView.propTypes = {
-  items: PropTypes.any,
-  depth: PropTypes.any,
+BaseTreeView.propTypes = {
+  items: PropTypes.array.isRequired,
+  depth: PropTypes.number,
+  onClick: PropTypes.func,
+  selected: PropTypes.any,
 };
-MenuTreeView.defaultProps = {
+BaseTreeView.defaultProps = {
   depth: 1,
 };
 
 /* Exports */
-export default MenuTreeView;
+export default BaseTreeView;

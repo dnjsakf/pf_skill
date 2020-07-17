@@ -1,8 +1,8 @@
 import graphene
 
-from .SideBarMutation import (
-  CreateSideBarMenu
+from .MenuMutation import (
+  CreateMenu
 )
 
 class Mutation(graphene.ObjectType):
-  create_side_bar_menu = CreateSideBarMenu.Field()
+  create_menu = CreateMenu.Field()

@@ -1,28 +1,33 @@
 /* React */
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-/* Styled */
-import styled from 'styled-components';
+/* Redux */
+import { useSelector, useDispatch } from 'react-redux';
+import * as selectors from 'reducers/menu/selectors';
+import actions from 'reducers/menu/actions';
 
 /* Apollo */
 import { useQuery } from 'react-apollo';
-import { GET_SIDE_BAR_MENUS } from '@graphql/SideBar/queries';
+import { GET_MENU_LIST } from '@graphql/menu/queries';
+
+/* Styled */
+import styled from 'styled-components';
 
 /* Material-UI */
 import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 
+/* Another Modules */
+import clsx from 'clsx';
+
 /* Custom Components */
 import { CircularProgress } from '@components/Progress';
 import { CircularSuspense } from '@components/Suspense';
 import { GridContainer, GridItem } from '@components/Grid';
-
-/* Another Components */
-import clsx from 'clsx';
+import { BaseTreeView } from '@components/TreeView';
 
 const MenuRegister = React.lazy(()=>import('./components/MenuRegister'));
-const MenuTreeView = React.lazy(()=>import('./components/MenuTreeView'));
 
 /* Styled Components */
 const Container = styled.div`
@@ -52,9 +57,13 @@ const MenuSetting = props => {
   /* Styles Hook */
   const classes = useStyles();
 
+  /* Redux Hook */
+  const dispatch = useDispatch();
+  const selected = useSelector( selectors.getMenuForMenuSettings );
+  
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
-    GET_SIDE_BAR_MENUS, {
+    GET_MENU_LIST, {
       //fetchPolicy: "cache-and-network",
       onError(error){
         console.error( error );
@@ -64,24 +73,34 @@ const MenuSetting = props => {
       }
     }
   );
+
+  /* Handlers */
+  const handleClick = useCallback( data => {
+    dispatch( actions.selectOnMenuSettings( data ) );
+  }, [ dispatch ]);
   
   /* Renderer */
   if ( loading ) return ( <CircularProgress /> );
   if ( error ) return ( `Error! ${error.message}` );
   
-  const { sideBarMenus } = data;
+  const { items } = data;
   
   /* Renderer */
   return (
     <CircularSuspense>
       <GridContainer spacing={ 1 }>
-        <GridItem sm={ 3 }>
+        <GridItem sm={ 2 }>
           <Paper className={ 
             clsx({
               [classes.paper]: true,
             })
           }>
-            <MenuTreeView items={ sideBarMenus } />
+            <h5>메뉴 목록</h5>
+            <BaseTreeView
+              items={ items }
+              selected={ selected }
+              onClick={ handleClick }
+            />
           </Paper>        
         </GridItem>
         <GridItem>
@@ -90,7 +109,9 @@ const MenuSetting = props => {
               [classes.paper]: true,
             })
           }>
-            <MenuRegister />
+            <MenuRegister 
+              selected={ selected }
+            />
           </Paper>
         </GridItem>
       </GridContainer>

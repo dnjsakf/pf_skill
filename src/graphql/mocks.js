@@ -1,5 +1,5 @@
-import SideBarMocks from "./SideBar/mocks";
+import MenuMocks from "./menu/mocks";
 
 export default [].concat(
-  SideBarMocks
+  MenuMocks
 )

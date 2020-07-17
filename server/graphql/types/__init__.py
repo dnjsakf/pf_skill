@@ -1,1 +1,1 @@
-from .SideBarType import SideBarMenuType, SideBarSubMenuType
+from .MenuType import MenuType, SubMenuType

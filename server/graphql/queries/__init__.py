@@ -1,9 +1,9 @@
 # api/query.pyf
 from graphene.relay import Node
-from .SideBarQuery import SideBarMenuQuery
+from .MenuQuery import MenuListQuery
 
 Inherits = [
-  SideBarMenuQuery
+  MenuListQuery
 ]
 
 class Query(*Inherits):

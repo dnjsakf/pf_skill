@@ -1,33 +1,33 @@
-import { GET_SIDE_BAR_MENUS } from './queries';
-import { CREATE_SIDE_BAR_MENU } from './mutations';
+import { GET_MENU_LIST } from './queries';
+import { CREATE_MENU } from './mutations';
 
 export default [
   {
     request: {
-      query: GET_SIDE_BAR_MENUS,
+      query: GET_MENU_LIST,
     },
     result: {
       data: {
-        sideBarMenus: [
+        items: [
           {
-            _id: "1",
+            id: "Home",
             group: "",
             name: "Home",
             label: "홈",
             href: "/home",
             icon: "Image",
-            subMenus: []
+            subItems: []
           },
           {
-            _id: "2",
+            id: "Skills",
             group: "",
             name: "Skills",
             label: "기술 스택",
             href: "/skills",
             icon: "Code",
-            subMenus: [
+            subItems: [
               {
-                _id: "1",
+                id: "Skills/ELK",
                 group: "Skills",
                 name: "ELK",
                 label: "ELK 스택",
@@ -35,7 +35,7 @@ export default [
                 icon: "Code"
               },
               {
-                _id: "2",
+                id: "Skills/ETL",
                 group: "Skills",
                 name: "ETL",
                 label: "ETL",
@@ -43,7 +43,7 @@ export default [
                 icon: "Code" 
               },
               {
-                _id: "3",
+                id: "Skills/Crawler",
                 group: "Skills",
                 name: "Crawler",
                 label: "크롤링",
@@ -51,7 +51,7 @@ export default [
                 icon: "Code" 
               },
               {
-                _id: "4",
+                id: "Skills/CELERY",
                 group: "Skills",
                 name: "CELERY",
                 label: "CELERY",
@@ -61,13 +61,13 @@ export default [
             ]
           },
           {
-            _id: "3",
+            id: "Settings",
             group: "",
             name: "Settings",
             label: "설정",
             href: "/settings",
             icon: "Settings",
-            subMenus: []
+            subItems: []
           }
         ]
       }
@@ -75,11 +75,12 @@ export default [
   },
   {
     request: {
-      query: CREATE_SIDE_BAR_MENU,
+      query: CREATE_MENU,
       variables: {
         group: "Settings",
         name: "Mocked",
-        href: "/settings",
+        label: "Mocked",
+        href: "/settings/mocked",
         icon: "Settings",
       },
     },
@@ -87,6 +88,13 @@ export default [
       data: {
         createSideBarMenu: {
           success: true,
+          menu: {
+            group: "Settings",
+            name: "Mocked",
+            label: "Mocked",
+            href: "/settings/mocked",
+            icon: "Settings",
+          },
         },
       }
     }

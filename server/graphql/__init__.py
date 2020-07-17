@@ -10,7 +10,8 @@ schema = graphene.Schema(
   query=Query,
   mutation=Mutation,
   types=[
-    SideBarMenuType,
+    MenuType,
+    SubMenuType
   ],
   auto_camelcase=True
 )

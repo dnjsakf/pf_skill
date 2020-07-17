@@ -2,9 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/* Styled */
-import styled from 'styled-components';
-
 /* Redux */
 import { connect } from 'react-redux';
 import * as layoutSelector from '@reducers/layout/selectors';
@@ -12,12 +9,14 @@ import layoutAction from '@reducers/layout/actions';
 import * as sidebarSelector from '@reducers/sidebar/selectors';
 import sidebarAction from '@reducers/sidebar/actions';
 
+/* Styled */
+import styled from 'styled-components';
+
 /* Material-UI */
 import { isWidthUp } from '@material-ui/core/withWidth';
 
-
-/* Custom Component */
-import { CircularSuspense } from 'components/Suspense';
+/* Custom Components */
+import { CircularSuspense } from '@components/Suspense';
 
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));

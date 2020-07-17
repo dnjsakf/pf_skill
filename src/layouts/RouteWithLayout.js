@@ -10,6 +10,7 @@ import withWidth from '@material-ui/core/withWidth';
 
 /* Main Component */
 const RouteWithLayout = props =>{
+  /* Props */
   const {
     layout: Layout,
     component: Component,
@@ -18,6 +19,7 @@ const RouteWithLayout = props =>{
     ...rest
   } = props;
 
+  /* Renderer */
   return (
     <Route
       {...rest}

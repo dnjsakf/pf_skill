@@ -1,13 +1,18 @@
 /* React */
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 /* Router */
-import { useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
+
+/* Redux */
+import { useSelector, useDispatch } from 'react-redux';
+import * as selectors from 'reducers/menu/selectors';
+import actions from 'reducers/menu/actions';
 
 /* GraphQL */
 import { useQuery } from "react-apollo";
-import { GET_SIDE_BAR_MENUS } from '@graphql/SideBar/queries';
+import { GET_MENU_LIST } from '@graphql/menu/queries';
 
 /* Material UI */
 import { makeStyles } from '@material-ui/styles';
@@ -15,12 +20,12 @@ import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 
-/* Custom Components */
-import CircularProgress from '@components/Progress/CircularProgress';
-import SideBarNavItem from './components/SideBarNavItem';
-
 /* Another Modules */
 import clsx from 'clsx';
+
+/* Custom Components */
+import { CircularProgress } from '@components/Progress';
+import { BaseTreeView } from '@components/TreeView';
 
 /* Styles Hook */
 const useStyles = makeStyles( theme => ({
@@ -33,6 +38,25 @@ const useStyles = makeStyles( theme => ({
     margin: theme.spacing(1, 0)
   },
 }));
+
+
+/* Sub Component */
+const Navigator = props => {
+  /* Props */
+  const {
+    ...rest
+  } = props;
+  
+  /* Router Hook */
+  const location = useLocation();
+  
+  /* Renderer */
+  return (
+    <div>
+      <span>{ location.pathname }</span>
+    </div>
+  );
+}
 
 /* Main Component */
 const SideBarNav = props => {
@@ -47,11 +71,16 @@ const SideBarNav = props => {
   const classes = useStyles();
   
   /* Router Hook */
+  const history = useHistory();
   const location = useLocation();
+
+  /* Redux Hook */
+  const dispatch = useDispatch();
+  const selected = useSelector( selectors.getMenuForSideBar );
   
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
-    GET_SIDE_BAR_MENUS, {
+    GET_MENU_LIST, {
       //fetchPolicy: "cache-and-network",
       onError(error){
         console.error( error );
@@ -62,40 +91,34 @@ const SideBarNav = props => {
     }
   );
   
+  /* Handlers */
+  const handleClick = useCallback( data => {
+    history.push( data.href );
+    
+    dispatch( actions.selectOnSideBar( data ) );
+  }, [ dispatch ]);
+  
+  /* Side Effects */
+  useEffect(()=>{
+    console.log( location.pathname, selected.href );
+    
+  }, [ location, history, selected ]);
+  
   /* Renderer */
   if ( loading ) return ( <CircularProgress /> );
   if ( error ) return ( `Error! ${error.message}` );
   
-  const { sideBarMenus } = data;
+  const { items } = data;
   
   return (
-    <List
-      {...rest}
-      className={ clsx( classes.root, className )}
-      aria-labelledby="nested-sidebar-menu"
-      subheader={
-        <ListSubheader 
-          component="div"
-          id="nested-sidebar-menu"
-          classes={{
-            sticky: classes.sticky
-          }}
-        >
-          <span>{ location.pathname }</span>
-        </ListSubheader>
-      }
-    >
-    {
-      sideBarMenus && sideBarMenus.map(( info, idx )=>{
-        return (
-          <React.Fragment key={ info._id }>
-            <SideBarNavItem info={ info } />
-            <Divider className={ classes.divider }/>
-          </React.Fragment>
-        )
-      })
-    }
-    </List>
+    <React.Fragment>
+      <Navigator />
+      <BaseTreeView
+        items={ items }
+        onClick={ handleClick }
+        selected={ selected }
+      />
+    </React.Fragment>
   );  
 }
 

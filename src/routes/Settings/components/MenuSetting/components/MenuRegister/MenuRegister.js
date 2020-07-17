@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 
 /* Redux */
 import { useSelector } from 'react-redux';
-import * as selectors from 'reducers/settings/menu/selectors';
+import * as selectors from 'reducers/menu/selectors';
 
 /* Apollo */
 import { useMutation } from 'react-apollo';
-import { CREATE_SIDE_BAR_MENU } from '@graphql/SideBar/mutations';
+import { CREATE_MENU } from '@graphql/menu/mutations';
 
 /* Material UI */
 import { makeStyles } from '@material-ui/styles';
@@ -19,12 +19,14 @@ import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
-/* Another Components */
+/* Another Modules */
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
+
+/* Custom Components */
 import { CircularProgress } from '@components/Progress';
 
-/* Constant */
+/* Styles Hook */
 const useStyles = makeStyles( theme => ({
   input: {
     padding: theme.spacing(1, 1)
@@ -40,6 +42,7 @@ const useStyles = makeStyles( theme => ({
   }
 }));
 
+/* Constant Variables */
 const initFormData = {
   group: "",
   name: "",
@@ -59,8 +62,8 @@ const MenuRegister = props => {
   /* State */
   const [ variables, setVariables ] = useState( initData );
 
-  /* Redux Hook: Selector */
-  const selected = useSelector( selectors.getMenu );
+  /* Redux Hook */
+  const selected = useSelector( selectors.getMenuForMenuSettings );
 
   /* Styles Hook */
   const classes = useStyles();
@@ -70,7 +73,7 @@ const MenuRegister = props => {
   
   /* Apollo Hook: Mutation */
   const [ mutate, { error, loading, data } ] = useMutation(
-    CREATE_SIDE_BAR_MENU, {
+    CREATE_MENU, {
       onError( error ){
         console.error( error );
         enqueueSnackbar('Save Failed: '+error.message, { 

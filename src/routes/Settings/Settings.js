@@ -21,7 +21,6 @@ const Settings = props => {
   /* Props */
   const {
     tabs,
-    panels,
     ...rest
   } = props;
 
@@ -30,7 +29,6 @@ const Settings = props => {
     <Container>
       <TabMenus 
         tabs={ tabs }
-        panels={ panels }
       />
     </Container>
   );
@@ -39,7 +37,6 @@ const Settings = props => {
 /* Main Component Settings */
 Settings.protoTypes = {
   tabs: PropTypes.array,
-  panels: PropTypes.array
 }
 
 Settings.defaultProps = {
