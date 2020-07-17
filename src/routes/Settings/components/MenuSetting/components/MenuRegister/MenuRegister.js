@@ -2,10 +2,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-/* Redux */
-import { useSelector } from 'react-redux';
-import * as selectors from 'reducers/menu/selectors';
-
 /* Apollo */
 import { useMutation } from 'react-apollo';
 import { CREATE_MENU } from '@graphql/menu/mutations';
@@ -14,8 +10,6 @@ import { CREATE_MENU } from '@graphql/menu/mutations';
 import { makeStyles } from '@material-ui/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
@@ -25,45 +19,70 @@ import { useSnackbar } from 'notistack';
 
 /* Custom Components */
 import { CircularProgress } from '@components/Progress';
+import { InputWithLabel } from '@components/Form/Input';
 
 /* Styles Hook */
 const useStyles = makeStyles( theme => ({
-  input: {
-    padding: theme.spacing(1, 1)
-  },
-  label: {
-    marginRight: 10
-  },
   divider: {
     margin: theme.spacing(1, 0)
   },
-  labelPlacementStart: {
-    margin: 'unset'
-  }
 }));
 
-/* Constant Variables */
-const initFormData = {
-  group: "",
-  name: "",
-  label: "",
-  href: "",
-  icon: "",
+/* Constants */
+const mapTypeToComponent = {
+  "input": InputWithLabel
 }
+
+const defines = [
+  {
+    type: "input",
+    label: "그룹명",
+    id: "menu-group-name",
+    name: "group",
+  },
+  {
+    type: "input",
+    label: "메뉴명",
+    id: "menu-name",
+    name: "name",
+  },
+  {
+    type: "input",
+    label: "라벨",
+    id: "menu-label",
+    name: "label",
+  },
+  {
+    type: "input",
+    label: "경로",
+    id: "menu-href",
+    name: "group",
+  },
+  {
+    type: "input",
+    label: "아이콘",
+    id: "menu-icon",
+    name: "icon",
+  },
+]
 
 /* Main Component */
 const MenuRegister = props => {
   /* Props */
   const {
+    mode,
     initData,
     ...rest
   } = props;
 
   /* State */
-  const [ variables, setVariables ] = useState( initData );
-
-  /* Redux Hook */
-  const selected = useSelector( selectors.getMenuForMenuSettings );
+  const [ variables, setVariables ] = useState( initData || {
+    group: "",
+    name: "",
+    label: "",
+    href: "",
+    icon: "",
+  });
 
   /* Styles Hook */
   const classes = useStyles();
@@ -110,10 +129,10 @@ const MenuRegister = props => {
 
   /* Side Effects */
   useEffect(()=>{
-    setVariables( selected );
-
-    console.log( selected );
-  }, [ selected ]);
+    if( initData ){
+      setVariables( initData );
+    }
+  }, [ initData ]);
 
   /* Renderer */
   if( loading ) return ( <CircularProgress /> );
@@ -124,122 +143,30 @@ const MenuRegister = props => {
         component="fieldset"
         error={ !!error }
       >
-        <FormGroup row={ false }>
-          <FormControlLabel
-            label="그룹명"
-            control={
-              <TextField
-                id="menu-group-name"
-                name="group"
-                variant="outlined"
-                InputProps={{
-                  classes: {
-                    input: classes.input
-                  }
-                }}
-                onChange={ handleChange }
-                value={ variables.group }
-              />
-            }
-            labelPlacement="start"
-            classes={{
-              label: classes.label,
-              labelPlacementStart: classes.labelPlacementStart
-            }}
-          />
-          <Divider className={ classes.divider }/>
-          <FormControlLabel
-            label="메뉴명"
-            control={
-              <TextField
-                id="menu-name"
-                name="name"
-                variant="outlined"
-                InputProps={{
-                  classes: {
-                    input: classes.input
-                  }
-                }}
-                onChange={ handleChange }
-                value={ variables.name }
-              />
-            }
-            labelPlacement="start"
-            classes={{
-              label: classes.label,
-              labelPlacementStart: classes.labelPlacementStart
-            }}
-          />
-          <Divider className={ classes.divider }/>
-          <FormControlLabel
-            label="라벨"
-            control={
-              <TextField
-                id="menu-label"
-                name="label"
-                variant="outlined"
-                InputProps={{
-                  classes: {
-                    input: classes.input
-                  }
-                }}
-                onChange={ handleChange }
-                value={ variables.label }
-              />
-            }
-            labelPlacement="start"
-            classes={{
-              label: classes.label,
-              labelPlacementStart: classes.labelPlacementStart
-            }}
-          />
-          <Divider className={ classes.divider }/>
-          <FormControlLabel
-            label="경로"
-            control={
-              <TextField
-                id="menu-href"
-                name="href"
-                variant="outlined"
-                InputProps={{
-                  classes: {
-                    input: classes.input
-                  }
-                }}
-                onChange={ handleChange }
-                value={ variables.href }
-              />
-            }
-            labelPlacement="start"
-            classes={{
-              label: classes.label,
-              labelPlacementStart: classes.labelPlacementStart
-            }}
-          />
-          <Divider className={ classes.divider }/>
-          <FormControlLabel
-            label="아이콘"
-            control={
-              <TextField
-                id="menu-icon"
-                name="icon"
-                variant="outlined"
-                InputProps={{
-                  classes: {
-                    input: classes.input
-                  }
-                }}
-                onChange={ handleChange }
-                value={ variables.icon }
-              />
-            }
-            labelPlacement="start"
-            classes={{
-              label: classes.label,
-              labelPlacementStart: classes.labelPlacementStart
-            }}
-          />
-          <Divider className={ classes.divider }/>
+        <FormGroup>
+          {
+            defines.map( info => {
+              const {
+                type,
+                ...others
+              } = info;
+              
+              const Component = mapTypeToComponent[type];
+              
+              if( !Component ){ return ( <span>Error</span> ) };
+              
+              return (
+                <React.Fragment key={ info.id }>
+                  <Component
+                    { ...others }
+                    value={ variables[others.name] }
+                    onChange={ handleChange }
+                  />
+                  <Divider className={ classes.divider }/>
+                </React.Fragment>
+              );
+            })
+          }
           <Button 
             type="submit"
             variant="outlined"
@@ -257,10 +184,14 @@ const MenuRegister = props => {
 
 /* Main Component Settings */
 MenuRegister.propTypes = {
-  initData: PropTypes.object,
-}
-MenuRegister.defaultProps = {
-  initData: initFormData
+  mode: PropTypes.oneOf(['update', 'create']),
+  initData: PropTypes.shape({
+    group: PropTypes.string,
+    name: PropTypes.string,
+    label: PropTypes.string,
+    href: PropTypes.string,
+    icon: PropTypes.string,
+  }),
 }
 
 /* Exports */

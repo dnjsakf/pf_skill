@@ -1,11 +1,6 @@
 /* React */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
-/* Redux */
-import { useSelector, useDispatch } from 'react-redux';
-import * as selectors from 'reducers/menu/selectors';
-import actions from 'reducers/menu/actions';
 
 /* Apollo */
 import { useQuery } from 'react-apollo';
@@ -54,12 +49,12 @@ const MenuSetting = props => {
     ...rest
   } = props;
   
+  /* State */
+  const [ selected, setSelected ] = useState( null );
+  const [ regMode, setRegMode ] = useState( selected ? "update" : "create" );
+  
   /* Styles Hook */
   const classes = useStyles();
-
-  /* Redux Hook */
-  const dispatch = useDispatch();
-  const selected = useSelector( selectors.getMenuForMenuSettings );
   
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
@@ -75,9 +70,14 @@ const MenuSetting = props => {
   );
 
   /* Handlers */
-  const handleClick = useCallback( data => {
-    dispatch( actions.selectOnMenuSettings( data ) );
-  }, [ dispatch ]);
+  const handleClick = useCallback( item => {
+    setSelected( item );
+  }, [ ]);
+  
+  /* Side Effects */
+  useEffect(()=>{
+    setRegMode( selected ? "update" : "create" );
+  }, [ selected ]);
   
   /* Renderer */
   if ( loading ) return ( <CircularProgress /> );
@@ -109,8 +109,9 @@ const MenuSetting = props => {
               [classes.paper]: true,
             })
           }>
-            <MenuRegister 
-              selected={ selected }
+            <MenuRegister
+              mode={ regMode }
+              initData={ selected }
             />
           </Paper>
         </GridItem>

@@ -1,14 +1,9 @@
 /* React */
-import React, { useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 /* Router */
 import { useHistory, useLocation } from 'react-router';
-
-/* Redux */
-import { useSelector, useDispatch } from 'react-redux';
-import * as selectors from 'reducers/menu/selectors';
-import actions from 'reducers/menu/actions';
 
 /* GraphQL */
 import { useQuery } from "react-apollo";
@@ -66,17 +61,14 @@ const SideBarNav = props => {
     ...rest
   } = props;
   
-  /* Hooks */
+  /* State */
+  const [ selected, setSelected ] = useState( null );
+  
   /* Styles Hook */
   const classes = useStyles();
   
   /* Router Hook */
   const history = useHistory();
-  const location = useLocation();
-
-  /* Redux Hook */
-  const dispatch = useDispatch();
-  const selected = useSelector( selectors.getMenuForSideBar );
   
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
@@ -92,17 +84,16 @@ const SideBarNav = props => {
   );
   
   /* Handlers */
-  const handleClick = useCallback( data => {
-    history.push( data.href );
-    
-    dispatch( actions.selectOnSideBar( data ) );
-  }, [ dispatch ]);
+  const handleClick = useCallback( item => {    
+    setSelected( item );    
+  }, []);
   
   /* Side Effects */
   useEffect(()=>{
-    console.log( location.pathname, selected.href );
-    
-  }, [ location, history, selected ]);
+    if( selected && selected.href ){
+      history.push( selected.href );
+    }
+  }, [ selected ]);
   
   /* Renderer */
   if ( loading ) return ( <CircularProgress /> );

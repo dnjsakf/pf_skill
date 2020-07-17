@@ -23,7 +23,7 @@ export default [
             group: "",
             name: "Skills",
             label: "기술 스택",
-            href: "/skills",
+            href: "",
             icon: "Code",
             subItems: [
               {

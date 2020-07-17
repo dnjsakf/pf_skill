@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 /* Material-UI */
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -78,7 +78,6 @@ const ExpandIcon = ({ isExpand, open }) => (
 const BaseTreeItem = props => {
   /* Props */
   const {
-    classes,
     item,
     depth,
     selected,
@@ -88,6 +87,10 @@ const BaseTreeItem = props => {
 
   /* State */
   const [open, setOpen] = useState( false );
+  
+  /* Styles Hook */
+  const classes = useStyles();
+  const theme = useTheme();
   
   /* Handlers */
   const handleClick = useCallback( event => {
@@ -109,9 +112,11 @@ const BaseTreeItem = props => {
         className={
           clsx({
             [classes.item]: true,
-            [classes.nested]: depth > 1,
           })          
         }
+        style={{
+          paddingLeft: theme.spacing((depth-1)*2)
+        }}
       >
         <Button
           className={ 
@@ -135,7 +140,6 @@ const BaseTreeItem = props => {
         isExpand && (
           <Collapse in={ open } timeout="auto" >
             <BaseTreeView
-              classes={ classes }
               items={ item.subItems }
               depth={ depth+1 }
               selected={ selected }
@@ -159,9 +163,6 @@ const BaseTreeView = props => {
     ...rest
   } = props;
   
-  /* Styles Hook */
-  const classes = useStyles();
-  
   /* Renderer */
   return (
     <List
@@ -172,7 +173,6 @@ const BaseTreeView = props => {
         items && items.map(( item, index )=>(
           <BaseTreeItem 
             key={ item.id }
-            classes={ classes }
             item={ item }
             depth={ depth }
             selected={ selected }
