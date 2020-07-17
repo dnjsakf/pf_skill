@@ -8,12 +8,13 @@
         "root": [ "./src" ],
         "alias": {
           "@src": "./src",
-          "@reducers": "./src/reducers",
           "@components": "./src/components",
-          "@theme": "./src/theme",
-          "@layouts": "./src/layouts",
           "@graphql": "./src/graphql",
-          "@routes": "./src/routes"
+          "@layouts": "./src/layouts",
+          "@public": "./src/public",
+          "@reducers": "./src/reducers",
+          "@routes": "./src/routes",
+          "@theme": "./src/theme"
         }
       }
     ],

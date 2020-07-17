@@ -14,7 +14,6 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 /* Another Modules */
-import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 
 /* Custom Components */
@@ -39,30 +38,50 @@ const defines = [
     label: "그룹명",
     id: "menu-group-name",
     name: "group",
+    validation: {
+      type: "name",
+      required: true,
+      maxLength: 100,
+    }
   },
   {
     type: "input",
     label: "메뉴명",
     id: "menu-name",
     name: "name",
+    validation: {
+      type: "name",
+      required: true,
+    }
   },
   {
     type: "input",
     label: "라벨",
     id: "menu-label",
     name: "label",
+    validation: {
+      type: "name",
+    }
   },
   {
     type: "input",
     label: "경로",
     id: "menu-href",
-    name: "group",
+    name: "href",
+    validation: {
+      type: "path",
+      maxLength: 100,
+    }
   },
   {
     type: "input",
     label: "아이콘",
     id: "menu-icon",
     name: "icon",
+    validation: {
+      type: "name",
+      maxLength: 10,
+    }
   },
 ]
 
@@ -71,12 +90,12 @@ const MenuRegister = props => {
   /* Props */
   const {
     mode,
-    initData,
+    defaultValue,
     ...rest
   } = props;
 
   /* State */
-  const [ variables, setVariables ] = useState( initData || {
+  const [ variables, setVariables ] = useState( defaultValue || {
     group: "",
     name: "",
     label: "",
@@ -88,7 +107,7 @@ const MenuRegister = props => {
   const classes = useStyles();
 
   /* SnackBar Hook */
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   
   /* Apollo Hook: Mutation */
   const [ mutate, { error, loading, data } ] = useMutation(
@@ -114,36 +133,31 @@ const MenuRegister = props => {
   );
 
   /* Handlers */
-  const handleChange = useCallback( event => {
-    setVariables({
-      ...variables,
-      [event.target.name]: event.target.value
-    });
-  }, [ variables ]);
-
   const handleSubmit = useCallback( event => {
-    mutate({
-      variables,
-    })
+    
+
+    // mutate({
+    //   variables,
+    // })
   }, [ mutate, variables ]);
 
   /* Side Effects */
   useEffect(()=>{
-    if( initData ){
-      setVariables( initData );
+    if( defaultValue ){
+      setVariables( defaultValue );
     }
-  }, [ initData ]);
+  }, [ defaultValue ]);
 
   /* Renderer */
   if( loading ) return ( <CircularProgress /> );
 
   return (
     <React.Fragment>
-      <FormControl
-        component="fieldset"
-        error={ !!error }
-      >
-        <FormGroup>
+      <form noValidate autoComplete="off">
+        <FormControl
+          component="fieldset"
+          error={ true }
+        >
           {
             defines.map( info => {
               const {
@@ -159,8 +173,7 @@ const MenuRegister = props => {
                 <React.Fragment key={ info.id }>
                   <Component
                     { ...others }
-                    value={ variables[others.name] }
-                    onChange={ handleChange }
+                    defaultValue={ variables[others.name] }
                   />
                   <Divider className={ classes.divider }/>
                 </React.Fragment>
@@ -176,8 +189,8 @@ const MenuRegister = props => {
           >
             저장
           </Button>
-        </FormGroup>
-      </FormControl>
+        </FormControl>
+      </form>
     </React.Fragment>
   );
 }
@@ -185,7 +198,7 @@ const MenuRegister = props => {
 /* Main Component Settings */
 MenuRegister.propTypes = {
   mode: PropTypes.oneOf(['update', 'create']),
-  initData: PropTypes.shape({
+  defaultValue: PropTypes.shape({
     group: PropTypes.string,
     name: PropTypes.string,
     label: PropTypes.string,

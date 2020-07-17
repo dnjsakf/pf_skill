@@ -111,7 +111,7 @@ const MenuSetting = props => {
           }>
             <MenuRegister
               mode={ regMode }
-              initData={ selected }
+              defaultValue={ selected }
             />
           </Paper>
         </GridItem>
