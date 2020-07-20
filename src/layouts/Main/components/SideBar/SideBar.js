@@ -3,24 +3,20 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 /* Redux */
-import { compose } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
 import { getIsOpen } from '@reducers/sidebar/selectors';
-import sidebarAction from '@reducers/sidebar/actions';
+import sideBarAction from '@reducers/sidebar/actions';
 
 /* Styled */
 import styled from 'styled-components';
 
 /* Material-UI */
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import Divider from '@material-ui/core/Divider'; 
 import Drawer from '@material-ui/core/Drawer';
 
-/* Custom Components */
+/* Child Components */
 import { Profile, SidebarNav } from './components';
-
-/* Another Components */
-import MyTheme from "@theme";
 
 /* Styles Hook */
 const useStyles = makeStyles( theme => ({
@@ -54,16 +50,17 @@ const SideBar = props => {
     ...rest
   } = props;
   
-  /* Hooks */
+  /* Styles Hook */
   const classes = useStyles();
+  const theme = useTheme();
 
-  /* Redux Hooks */
+  /* Redux Hook */
   const dispatch = useDispatch()
   const isOpen = useSelector( getIsOpen );
   
-  /* Dispatchers */
+  /* Handlers */
   const handleClose = useCallback(()=>{
-    dispatch( sidebarAction.close() )
+    dispatch( sideBarAction.setClose() );
   }, [ dispatch ]);
   
   /* Renderer */
@@ -77,7 +74,7 @@ const SideBar = props => {
       open={ isOpen }
       variant={ variant }
     >
-      <Container theme={ MyTheme }>
+      <Container theme={ theme }>
         <Profile />
         <Divider className={ classes.divider } />
         <SidebarNav />

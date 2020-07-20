@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import NotFound from '@components/NotFound';
 import { CircularSuspense } from '@components/Suspense';
 
+/* Child Components */
 const SkillsMain = React.lazy(()=>(import('./components/SkillsMain')));
 const SkillsELK = React.lazy(()=>(import('./components/SkillsELK')));
 const SkillsETL = React.lazy(()=>(import('./components/SkillsETL')));

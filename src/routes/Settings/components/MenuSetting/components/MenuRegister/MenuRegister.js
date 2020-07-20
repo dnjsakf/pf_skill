@@ -27,7 +27,7 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-/* Constants */
+/* Constant Variables */
 const mapTypeToComponent = {
   "input": InputWithLabel
 }
@@ -134,8 +134,7 @@ const MenuRegister = props => {
 
   /* Handlers */
   const handleSubmit = useCallback( event => {
-    
-
+    // @ToDo: Write mutation
     // mutate({
     //   variables,
     // })

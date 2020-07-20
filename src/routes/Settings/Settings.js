@@ -8,6 +8,7 @@ import styled from 'styled-components';
 /* Custom Components */
 import TabMenus from '@components/TabMenus';
 
+/* Child Components */
 const MenuSetting = React.lazy(()=>( import('./components/MenuSetting') ));
 const ThemeSetting = React.lazy(()=>( import('./components/ThemeSetting') ));
 
@@ -27,9 +28,7 @@ const Settings = props => {
   /* Renderer */
   return (
     <Container>
-      <TabMenus 
-        tabs={ tabs }
-      />
+      <TabMenus tabs={ tabs } />
     </Container>
   );
 }

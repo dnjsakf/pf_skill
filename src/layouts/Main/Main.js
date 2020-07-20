@@ -1,151 +1,130 @@
 /* React */
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+/* Router */
+import { useLocation } from 'react-router';
+
 /* Redux */
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as layoutSelector from '@reducers/layout/selectors';
 import layoutAction from '@reducers/layout/actions';
-import * as sidebarSelector from '@reducers/sidebar/selectors';
-import sidebarAction from '@reducers/sidebar/actions';
-
-/* Styled */
-import styled from 'styled-components';
+import * as sideBarSelector from '@reducers/sidebar/selectors';
+import sideBarAction from '@reducers/sidebar/actions';
 
 /* Material-UI */
 import { isWidthUp } from '@material-ui/core/withWidth';
+import { useMediaQuery } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/styles';
+
+/* Another Modules */
+import clsx from 'clsx';
 
 /* Custom Components */
 import { CircularSuspense } from '@components/Suspense';
 
+/* Child Components */
 const Header = React.lazy(()=>import('./components/Header'));
 const Footer = React.lazy(()=>import('./components/Footer'));
 const SideBar = React.lazy(()=>import('./components/SideBar'));
 
-/* Styled Components */
-const Container = styled.div`
-  padding-top: 56px;
-  height: 100%;
-
-  @media (min-width: 600px) {
-    padding-top: 64px;
-  }
-
-  ${({ isDesktop })=>{
-    if( isDesktop ){
-      return "padding-left: 240px;"
+/* Styles Hook */
+const useStyles = makeStyles( theme => ({
+  root: {
+    paddingTop: 56,
+    height: '100%',
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: 64
     }
-  }}
-`;
-
-const Section = styled.main`
-  height: 100%;
-`;
-
-const SectionWrapper = styled.div`
-  height: 100%;
-`;
-
+  },
+  shiftContent: {
+    paddingLeft: 240
+  },
+  main: {
+    height: "100%",
+  },
+  wrapper: {
+    height: "100%",
+  }
+}));
 
 /* Main Compoent */
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+const Main = props => {
+  /* Props */
+  const {
+    className,
+    children,
+    ...rest
+  } = props;
   
-  componentDidMount(){
-    const isDesktop = isWidthUp('lg', this.props.width);
-    
-    this.props.setIsDesktop( isDesktop );
-    this.props.setIsOpenSideBar( isDesktop );
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    // When resized window.
-    const isDesktop = isWidthUp('lg', nextProps.width);
-    if( this.props.isDesktop !== nextProps.isDesktop || isDesktop !== this.props.isDesktop ) {
-      this.props.setIsDesktop( isDesktop );
-      this.props.setIsOpenSideBar( isDesktop );
-      
-      return true;
-    }
-
-    // Changed Page
-    if( nextProps.location.pathname !== this.props.location.pathname ){
-      return true;
-    }
-    
-    return false;
-  }
+  /* Styles Hooke */
+  const classes = useStyles();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
+    defaultMatches: true
+  });
   
-  componentDidUpdate(){
+  /* Router Hook */
+  const location = useLocation();
+  
+  /* Redux Hook */
+  const dispatch = useDispatch();
+  
+  /* Side Effects */
+  useEffect(()=>{
+    dispatch( layoutAction.setIsDesktop( isDesktop ) );
+    dispatch( sideBarAction.setIsOpen( isDesktop ) );
+  }, [ dispatch, isDesktop ]);
+  
+  useEffect(()=>{    
     document.scrollingElement.scrollTop = 0;
-  }
-
-  render() {
-    const {
-      classes,
-      location,
-      className,
-      isDesktop,
-      isOpenSideBar,
-      openSideBar,
-      ...rest
-    } = this.props;
-
-    return (
-      <CircularSuspense>
-        <Container isDesktop={ isDesktop }>
-          <CircularSuspense>
-            <Header />
-          </CircularSuspense>
-          
-          <CircularSuspense>
-            <SideBar
-              location={ location }
-              variant={ isDesktop ? 'persistent' : 'temporary'}
-            />
-          </CircularSuspense>
-          
-          <CircularSuspense>
-            <Section>
-              <SectionWrapper>
-                { this.props.children }
-              </SectionWrapper>
-            </Section>
-            <Footer />
-          </CircularSuspense>
-          
-        </Container>
-      </CircularSuspense>
-    );
-  }
+  }, [ location ]);
+  
+  /* Renderer */
+  return (
+    <CircularSuspense>
+      <div 
+        className={
+          clsx({
+            [classes.root]: true,
+            [classes.shiftContent]: isDesktop
+          }, 
+          className)                 
+        }
+      >
+        <CircularSuspense>
+          <Header />
+        </CircularSuspense>
+        
+        <CircularSuspense>
+          <SideBar 
+            variant={
+              isDesktop 
+              ? 'persistent' 
+              : 'temporary'
+            }
+          />
+        </CircularSuspense>
+        
+        <CircularSuspense>
+          <main className={ classes.main }>
+            <div className={ classes.wrapper }>
+              { children }
+            </div>
+          </main>
+          <Footer />
+        </CircularSuspense>
+        
+      </div>
+    </CircularSuspense>
+  );
 }
 
 /* Main Component Settings */
 Main.propTypes = {
   isDesktop: PropTypes.bool,
-  isOPenSideBar: PropTypes.bool,
-  openSideBar: PropTypes.func,
+  children: PropTypes.node,
 }
 
-/* Mapping to props */
-const mapPropsToState = state => ({
-  isDesktop: layoutSelector.getIsDesktop(state),
-  isOpenSideBar: sidebarSelector.getIsOpen(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  setIsDesktop( isDesktop ){
-    dispatch( layoutAction.setIsDesktop( isDesktop ) )
-  },
-  setIsOpenSideBar( isOpen ){
-    dispatch( sidebarAction.setIsOpen( isOpen ) );
-  },
-  openSideBar(){
-    dispatch( sidebarAction.open() );
-  },
-});
-
 /* Exports */
-export default connect( mapPropsToState, mapDispatchToProps )( Main );
+export default Main;

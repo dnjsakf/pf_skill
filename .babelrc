@@ -14,7 +14,8 @@
           "@public": "./src/public",
           "@reducers": "./src/reducers",
           "@routes": "./src/routes",
-          "@theme": "./src/theme"
+          "@theme": "./src/theme",
+          "@utils": "./src/utils"
         }
       }
     ],

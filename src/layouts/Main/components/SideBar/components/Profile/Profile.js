@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 /* Another Modules */
 import clsx from 'clsx';
 
-/* Hooks */
-const useStyles = makeStyles((theme)=>({
+/* Styles Hook */
+const useStyles = makeStyles( theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -30,22 +30,25 @@ const useStyles = makeStyles((theme)=>({
   }
 }));
 
-/* Contants */
+/* Contant Variables */
 const user = {
   name: 'Dochi',
   avatar: '/public/images/avatars/dochi.jpeg',
   bio: 'Developer'
 };
 
-/* Component */
-const Profile = ( props )=>{
-  const classes = useStyles();
+/* Main Component */
+const Profile = props => {
+  /* Props */
   const {
     className,
     ...rest
   } = props;
+  
+  /* Styles Hook */
+  const classes = useStyles();
 
-  /* Rendering */
+  /* Renderer */
   return (
     <div
       {...rest}
@@ -71,8 +74,10 @@ const Profile = ( props )=>{
   );
 };
 
+/* Main Component Settings */
 Profile.propTypes = {
   className: PropTypes.string
 };
 
+/* Exrpots */
 export default Profile;

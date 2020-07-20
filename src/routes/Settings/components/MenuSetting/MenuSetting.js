@@ -22,6 +22,7 @@ import { CircularSuspense } from '@components/Suspense';
 import { GridContainer, GridItem } from '@components/Grid';
 import { BaseTreeView } from '@components/TreeView';
 
+/* Child Components */
 const MenuRegister = React.lazy(()=>import('./components/MenuRegister'));
 
 /* Styled Components */
@@ -31,7 +32,7 @@ const Container = styled.div`
 `;
 
 /* Styles Hook */
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles( theme => ({
   root: {
     flexGrow: 1,
   },
@@ -56,7 +57,7 @@ const MenuSetting = props => {
   /* Styles Hook */
   const classes = useStyles();
   
-  /* Apollo Hook */
+  /* Apollo Hook: Query */
   const { loading, error, data, fetchMore, refetch } = useQuery(
     GET_MENU_LIST, {
       //fetchPolicy: "cache-and-network",

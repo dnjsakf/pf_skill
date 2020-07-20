@@ -34,7 +34,6 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-
 /* Sub Component */
 const Navigator = props => {
   /* Props */
@@ -69,6 +68,7 @@ const SideBarNav = props => {
   
   /* Router Hook */
   const history = useHistory();
+  const location = useLocation();
   
   /* Apollo Hook */
   const { loading, error, data, fetchMore, refetch } = useQuery(
@@ -77,8 +77,8 @@ const SideBarNav = props => {
       onError(error){
         console.error( error );
       },
-      onCompleted( completed ){
-        console.log('[COMPLETED]', completed);
+      onCompleted( { items } ){
+        console.log('[COMPLETED]', location.pathname, items);
       }
     }
   );
