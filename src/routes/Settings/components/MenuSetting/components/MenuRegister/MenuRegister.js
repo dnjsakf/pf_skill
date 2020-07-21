@@ -1,10 +1,10 @@
 /* React */
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 /* Apollo */
 import { useMutation } from 'react-apollo';
-import { CREATE_MENU } from '@graphql/menu/mutations';
+import { CREATE_MENU, UPDATE_MENU, DELETE_MENU } from '@graphql/menu/mutations';
 
 /* Material UI */
 import { makeStyles } from '@material-ui/styles';
@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 /* Another Modules */
 import { useSnackbar } from 'notistack';
@@ -83,76 +84,202 @@ const defines = [
       maxLength: 10,
     }
   },
-]
+];
+
+const initValue = {
+  group: "",
+  name: "",
+  label: "",
+  href: "",
+  icon: "",
+  sortOrder: 0,
+}
 
 /* Main Component */
 const MenuRegister = props => {
   /* Props */
   const {
-    mode,
     defaultValue,
     ...rest
   } = props;
 
   /* State */
-  const [ variables, setVariables ] = useState( defaultValue || {
-    group: "",
-    name: "",
-    label: "",
-    href: "",
-    icon: "",
-  });
+  const [ mode, setMode ] = useState( defaultValue ? "update" : "create" );
+  const [ variables, setVariables ] = useState( defaultValue || initValue );
+
+  /* Ref */
+  const formRef = useRef();
 
   /* Styles Hook */
   const classes = useStyles();
 
   /* SnackBar Hook */
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   
   /* Apollo Hook: Mutation */
-  const [ mutate, { error, loading, data } ] = useMutation(
+  const [ createMutate, { loading: createLoading } ] = useMutation(
     CREATE_MENU, {
+      onError( error ){
+        enqueueSnackbar('Save Failed: '+error.message, { 
+          variant: 'error',
+          autoHideDuration: 1500,
+          transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
+        });
+      },
+      onCompleted({ createMenu: { menu, success } }) {
+        console.log("[CREATED]", success, menu);
+
+        enqueueSnackbar('Save Success!!!', { 
+          variant: 'success',
+          autoHideDuration: 1500,
+          transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
+        });
+
+        setVariables( menu );
+      }
+    }
+  );
+  
+  /* Apollo Hook: Mutation */
+  const [ updateMutate, { loading: updateLoading } ] = useMutation(
+    UPDATE_MENU, {
       onError( error ){
         console.error( error );
         enqueueSnackbar('Save Failed: '+error.message, { 
           variant: 'error',
           autoHideDuration: 1500,
           transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
         });
       },
-      onCompleted({ createSideBarMenu: { success } }) {
-        console.log("[CREATED]", success);
+      onCompleted({ updateMenu: { menu, success } }) {
+        console.log("[UPDATED]", success, menu);
 
         enqueueSnackbar('Save Success!!!', { 
           variant: 'success',
           autoHideDuration: 1500,
           transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
         });
+
+        setVariables( menu );
+      }
+    }
+  );
+  
+  /* Apollo Hook: Mutation */
+  const [ deleteMutate, { loading: deleteLoading } ] = useMutation(
+    DELETE_MENU, {
+      onError( error ){
+        console.error( error );
+        enqueueSnackbar('Save Failed: '+error.message, { 
+          variant: 'error',
+          autoHideDuration: 1500,
+          transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
+        });
+      },
+      onCompleted({ deleteMenu: { delcount, success } }) {
+        console.log("[DELETED]", success, delcount);
+
+        enqueueSnackbar('Save Success!!!', { 
+          variant: 'success',
+          autoHideDuration: 1500,
+          transitionDuration: 150,
+          action: (
+            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
+              UNDO
+            </Button>
+          ),
+        });
+
+        setVariables( initValue );
+        setMode( "create" );
       }
     }
   );
 
   /* Handlers */
   const handleSubmit = useCallback( event => {
-    // @ToDo: Write mutation
-    // mutate({
-    //   variables,
-    // })
-  }, [ mutate, variables ]);
+    event.preventDefault();
+
+    const formData = {}
+    const inputs = Array.from(formRef.current.querySelectorAll('input[name]'));
+    
+    inputs.forEach( input => formData[input.name] = input.value );
+
+    switch( mode ){
+      case "create":
+        createMutate({
+          variables: formData,
+        });
+        break;
+      case "update":
+        updateMutate({
+          variables: formData,
+        });
+        break; 
+    }
+    
+  }, [ mode, createMutate, updateMutate ]);
+
+  const handleDelete = useCallback( event => {
+    event.preventDefault();
+
+    if( mode == "update" ){
+      const formData = {}
+      const inputs = Array.from(formRef.current.querySelectorAll('input[name]'));
+      
+      inputs.forEach( input => formData[input.name] = input.value );
+
+      deleteMutate({
+        variables: {
+          group: formData.group,
+          name: formData.name
+        }
+      });
+    }
+  }, [ mode, deleteMutate ]);
 
   /* Side Effects */
   useEffect(()=>{
     if( defaultValue ){
       setVariables( defaultValue );
+      setMode( "update" );
+    } else {
+      setMode( "create" );
     }
   }, [ defaultValue ]);
 
   /* Renderer */
-  if( loading ) return ( <CircularProgress /> );
+  if( createLoading || updateLoading || deleteLoading ) return ( <CircularProgress /> );
 
   return (
     <React.Fragment>
-      <form noValidate autoComplete="off">
+      <span>{ mode }</span>
+      <form ref={ formRef } noValidate autoComplete="off">
         <FormControl
           component="fieldset"
           error={ true }
@@ -179,15 +306,26 @@ const MenuRegister = props => {
               );
             })
           }
-          <Button 
-            type="submit"
-            variant="outlined"
-            color="primary"
-            className={ classes.button }
-            onClick={ handleSubmit }
-          >
-            저장
-          </Button>
+          <ButtonGroup>
+            <Button 
+              type="submit"
+              variant="outlined"
+              color="primary"
+              className={ classes.button }
+              onClick={ handleSubmit }
+            >
+              저장
+            </Button>
+            <Button 
+              type="submit"
+              variant="outlined"
+              color="primary"
+              className={ classes.button }
+              onClick={ handleDelete }
+            >
+              삭제
+            </Button>
+          </ButtonGroup>
         </FormControl>
       </form>
     </React.Fragment>

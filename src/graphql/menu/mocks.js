@@ -1,5 +1,5 @@
 import { GET_MENU_LIST } from './queries';
-import { CREATE_MENU } from './mutations';
+import { CREATE_MENU, UPDATE_MENU, DELETE_MENU } from './mutations';
 
 export default [
   {
@@ -98,5 +98,48 @@ export default [
         },
       }
     }
-  }
+  },
+  {
+    request: {
+      query: UPDATE_MENU,
+      variables: {
+        group: "",
+        name: "Home",
+        label: "Home",
+        href: "/home",
+        icon: "Image",
+      },
+    },
+    result: {
+      data: {
+        createSideBarMenu: {
+          success: true,
+          menu: {
+            group: "",
+            name: "Home",
+            label: "Home",
+            href: "/home",
+            icon: "Image",
+          },
+        },
+      }
+    }
+  },
+  {
+    request: {
+      query: DELETE_MENU,
+      variables: {
+        group: "",
+        name: "Home",
+      },
+    },
+    result: {
+      data: {
+        createSideBarMenu: {
+          success: true,
+          delcount: 1
+        },
+      }
+    }
+  },
 ]

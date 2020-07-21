@@ -90,7 +90,7 @@ const MenuSetting = props => {
   return (
     <CircularSuspense>
       <GridContainer spacing={ 1 }>
-        <GridItem sm={ 2 }>
+        <GridItem sm={ 3 }>
           <Paper className={ 
             clsx({
               [classes.paper]: true,

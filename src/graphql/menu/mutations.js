@@ -9,7 +9,7 @@ export const CREATE_MENU = gql(`
     $icon: String,
     $sortOrder: Int
   ) {
-    createSideBarMenu (
+    createMenu (
       group: $group,
       name: $name,
       label: $label,
@@ -17,8 +17,59 @@ export const CREATE_MENU = gql(`
       icon: $icon,
       sortOrder: $sortOrder
     ) {
+      menu {
+        group
+        name
+        label
+        href
+        icon
+        sortOrder
+      }
       success
-      menu
+    }
+  }
+`);
+
+export const UPDATE_MENU = gql(`
+  mutation updateMenu(
+    $group: String,
+    $name: String!,
+    $label: String!,
+    $href: String!,
+    $icon: String,
+    $sortOrder: Int
+  ) {
+    updateMenu(
+      group: $group,
+      name: $name,
+      label:$label,
+      href: $href,
+      icon: $icon,
+      sortOrder: $sortOrder
+    ) {
+      menu {
+        group
+        name
+        label
+        href
+        icon
+      }
+      success
+    }
+  }
+`);
+
+export const DELETE_MENU = gql(`
+  mutation deleteMenu(
+    $group: String,
+    $name: String!
+  ) {
+    deleteMenu(
+      group: $group,
+      name: $name
+    ) {
+      delcount
+      success
     }
   }
 `);
