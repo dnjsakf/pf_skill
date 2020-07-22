@@ -27,6 +27,7 @@ const useStyles = makeStyles( theme => ({
 const InputWithLabel = props => {
   /* Props */
   const {
+    mode,
     label,
     defaultValue,
     validation,
@@ -69,6 +70,8 @@ const InputWithLabel = props => {
             classes: {
               input: classes.input
             },
+            readOnly: (mode == "update" && validation.readOnly),
+            disabled: (mode == "update" && validation.disabled),
           }}
           value={ value }
           onChange={ handleChange }
@@ -97,6 +100,7 @@ InputWithLabel.propTypes = {
   onChange: PropTypes.func,
 }
 InputWithLabel.defaultProps = {
+  mode: "create",
   variant: "outlined",
 }
 

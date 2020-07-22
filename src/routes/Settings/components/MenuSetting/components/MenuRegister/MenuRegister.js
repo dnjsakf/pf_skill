@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 /* Another Modules */
+import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 
 /* Custom Components */
@@ -23,6 +24,9 @@ import { InputWithLabel } from '@components/Form/Input';
 
 /* Styles Hook */
 const useStyles = makeStyles( theme => ({
+  buttonGroup: {    
+    alignItems: 'center',
+  },
   divider: {
     margin: theme.spacing(1, 0)
   },
@@ -42,6 +46,7 @@ const defines = [
     validation: {
       type: "name",
       required: true,
+      readOnly: true,
       maxLength: 100,
     }
   },
@@ -53,6 +58,7 @@ const defines = [
     validation: {
       type: "name",
       required: true,
+      readOnly: true,
     }
   },
   {
@@ -95,6 +101,46 @@ const initValue = {
   sortOrder: 0,
 }
 
+const MODE = {
+  UPDATE: MODE.UPDATE,
+  CREATE: MODE.CREATE,
+  DELETE: "delete",
+}
+
+/* Sub Component */
+const CloseButton = props => {
+  const {
+    onClose,
+    ...rest
+  } = props;
+  
+  return (
+    <Button color="secondary" size="small" onClick={ onClose }>
+      Close
+    </Button>
+  );
+}
+
+/* Custom Hook */
+const useResultAlert = props => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  
+  const chandleClose = () => {
+    closeSnackbar();
+  }
+  
+  const handleSnackbar = (type, message) => {
+    enqueueSnackbar(message, { 
+      variant: type,
+      autoHideDuration: 1500,
+      transitionDuration: 150,
+      action: ( <CloseButton onClose={ chandleClose }/> ),
+    })
+  }
+  
+  return handleSnackbar;
+}
+
 /* Main Component */
 const MenuRegister = props => {
   /* Props */
@@ -104,8 +150,9 @@ const MenuRegister = props => {
   } = props;
 
   /* State */
-  const [ mode, setMode ] = useState( defaultValue ? "update" : "create" );
+  const [ mode, setMode ] = useState( defaultValue ? MODE.UPDATE : MODE.CREATE );
   const [ variables, setVariables ] = useState( defaultValue || initValue );
+  const [ error, setError ] = useState( false );
 
   /* Ref */
   const formRef = useRef();
@@ -114,38 +161,22 @@ const MenuRegister = props => {
   const classes = useStyles();
 
   /* SnackBar Hook */
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const customSnackbar = useResultAlert();
   
   /* Apollo Hook: Mutation */
   const [ createMutate, { loading: createLoading } ] = useMutation(
     CREATE_MENU, {
       onError( error ){
-        enqueueSnackbar('Save Failed: '+error.message, { 
-          variant: 'error',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
+        customSnackbar('error', 'Create failed: '+error.message);
+        setError( true );
       },
       onCompleted({ createMenu: { menu, success } }) {
-        console.log("[CREATED]", success, menu);
-
-        enqueueSnackbar('Save Success!!!', { 
-          variant: 'success',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
-
-        setVariables( menu );
+        customSnackbar('success', 'Create completed');
+        
+        if( success ){
+          setVariables( menu );
+        }
+        setError( !success );
       }
     }
   );
@@ -154,33 +185,16 @@ const MenuRegister = props => {
   const [ updateMutate, { loading: updateLoading } ] = useMutation(
     UPDATE_MENU, {
       onError( error ){
-        console.error( error );
-        enqueueSnackbar('Save Failed: '+error.message, { 
-          variant: 'error',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
+        customSnackbar('error', 'Update failed: '+error.message);
+        setError( true );
       },
       onCompleted({ updateMenu: { menu, success } }) {
-        console.log("[UPDATED]", success, menu);
+        customSnackbar('success', 'Update completed.');
 
-        enqueueSnackbar('Save Success!!!', { 
-          variant: 'success',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
-
-        setVariables( menu );
+        if( success ){
+          setVariables( menu ); 
+        }
+        setError( !success );
       }
     }
   );
@@ -189,39 +203,27 @@ const MenuRegister = props => {
   const [ deleteMutate, { loading: deleteLoading } ] = useMutation(
     DELETE_MENU, {
       onError( error ){
-        console.error( error );
-        enqueueSnackbar('Save Failed: '+error.message, { 
-          variant: 'error',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
+        customSnackbar('error', 'Delete failed: '+error.message);
+        setError( true );
       },
       onCompleted({ deleteMenu: { delcount, success } }) {
-        console.log("[DELETED]", success, delcount);
+        customSnackbar('success', 'Delete completed.');
 
-        enqueueSnackbar('Save Success!!!', { 
-          variant: 'success',
-          autoHideDuration: 1500,
-          transitionDuration: 150,
-          action: (
-            <Button color="secondary" size="small" onClick={ ()=>{ closeSnackbar() } }>
-              UNDO
-            </Button>
-          ),
-        });
-
-        setVariables( initValue );
-        setMode( "create" );
+        if( success ){
+          setVariables( initValue );
+          setMode( MODE.CREATE );
+        }
+        setError( !success );
       }
     }
   );
 
   /* Handlers */
+  const handleCancel = useCallback( event => {
+    setMode(MODE.CREATE);
+    setVariables( initValue );
+  }, [  ]);
+  
   const handleSubmit = useCallback( event => {
     event.preventDefault();
 
@@ -231,12 +233,12 @@ const MenuRegister = props => {
     inputs.forEach( input => formData[input.name] = input.value );
 
     switch( mode ){
-      case "create":
+      case MODE.CREATE:
         createMutate({
           variables: formData,
         });
         break;
-      case "update":
+      case MODE.UPDATE:
         updateMutate({
           variables: formData,
         });
@@ -248,7 +250,7 @@ const MenuRegister = props => {
   const handleDelete = useCallback( event => {
     event.preventDefault();
 
-    if( mode == "update" ){
+    if( mode == MODE.UPDATE ){
       const formData = {}
       const inputs = Array.from(formRef.current.querySelectorAll('input[name]'));
       
@@ -267,9 +269,9 @@ const MenuRegister = props => {
   useEffect(()=>{
     if( defaultValue ){
       setVariables( defaultValue );
-      setMode( "update" );
+      setMode( MODE.UPDATE );
     } else {
-      setMode( "create" );
+      setMode( MODE.CREATE );
     }
   }, [ defaultValue ]);
 
@@ -278,55 +280,71 @@ const MenuRegister = props => {
 
   return (
     <React.Fragment>
-      <span>{ mode }</span>
       <form ref={ formRef } noValidate autoComplete="off">
-        <FormControl
-          component="fieldset"
-          error={ true }
-        >
-          {
-            defines.map( info => {
-              const {
-                type,
-                ...others
-              } = info;
-              
-              const Component = mapTypeToComponent[type];
-              
-              if( !Component ){ return ( <span>Error</span> ) };
-              
-              return (
-                <React.Fragment key={ info.id }>
-                  <Component
-                    { ...others }
-                    defaultValue={ variables[others.name] }
-                  />
-                  <Divider className={ classes.divider }/>
-                </React.Fragment>
-              );
-            })
-          }
-          <ButtonGroup>
-            <Button 
-              type="submit"
-              variant="outlined"
-              color="primary"
-              className={ classes.button }
-              onClick={ handleSubmit }
-            >
-              저장
-            </Button>
-            <Button 
-              type="submit"
-              variant="outlined"
-              color="primary"
-              className={ classes.button }
-              onClick={ handleDelete }
-            >
-              삭제
-            </Button>
-          </ButtonGroup>
-        </FormControl>
+        <FormGroup>
+          <Button type="submit"
+            className={ classes.button }
+            onClick={ handleDelete }
+          >
+            삭제
+          </Button>
+        </FormGroup>
+        <FormGroup>
+          <FormControl  
+            component="fieldset"
+            error={ error }
+          >
+            {
+              defines.map( info => {
+                const {
+                  type,
+                  ...others
+                } = info;
+                
+                const Component = mapTypeToComponent[type];
+                
+                if( !Component ){ return ( <span>Error</span> ) };
+                
+                return (
+                  <React.Fragment key={ info.id }>
+                    <Component
+                      { ...others }
+                      mode={ mode }
+                      defaultValue={ variables[others.name] }
+                    />
+                    <Divider className={ classes.divider }/>
+                  </React.Fragment>
+                );
+              })
+            }
+            <div className={ classes.buttonGroup }>
+              <ButtonGroup
+                variant="contained"
+                color="primary"
+                aria-label="contained primary button group"
+              >
+                {
+                  mode == MODE.UPDATE && (
+                    <Button 
+                      type="submit"
+                      className={ classes.button }
+                      onClick={ handleCancel }
+                    >
+                      취소
+                    </Button>
+                  )
+                }
+                <Button 
+                  type="submit"
+                  className={ classes.button }
+                  onClick={ handleSubmit }
+                >
+                  저장
+                </Button>
+              </ButtonGroup>
+            </div>
+          </FormControl>
+        </FormGroup>
       </form>
     </React.Fragment>
   );
