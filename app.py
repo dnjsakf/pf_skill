@@ -13,7 +13,7 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 app = create_app(**{
   "ROOT_PATH": ROOT_PATH,
   "BUILD_PATH": os.path.join(ROOT_PATH, "dist"),
-  "STATIC_PATH": os.path.join(ROOT_PATH, "dist/public")
+  "STATIC_PATH": os.path.join(ROOT_PATH, "dist")
 })
 
 if __name__ == '__main__':

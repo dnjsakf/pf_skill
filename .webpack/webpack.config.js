@@ -39,7 +39,7 @@ module.exports = {
       filename: "[name].bundle.css",
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "../src/index.html"),
+      template: path.join(__dirname, "../public/index.html"),
     }),
     new webpack.ProgressPlugin((percentage, message, ...args)=>{
       console.info(Math.trunc(percentage*100), "%", message, ...args);

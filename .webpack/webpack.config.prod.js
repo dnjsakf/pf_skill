@@ -25,8 +25,8 @@ module.exports = merge(config, {
     new CopyPlugin({
       patterns: [
         {
-          from: "src/public",
-          to: "public",
+          from: "public",
+          // to: "public",
           globOptions: {
             ignore: [
               "**/.*",

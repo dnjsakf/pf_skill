@@ -11,8 +11,13 @@ def create_app(*args, **kwargs):
   APP_PATH = os.path.dirname(os.path.abspath(__file__))  
   ROOT_PATH = kwargs.get("ROOT_PATH", os.path.join(APP_PATH, "../"))
   BUILD_PATH = kwargs.get("BUILD_PATH", os.path.join(ROOT_PATH, 'dist'))
-  STATIC_PATH = kwargs.get("STATIC_PATH", os.path.join(BUILD_PATH, 'dist/public'))
+  STATIC_PATH = kwargs.get("STATIC_PATH", os.path.join(BUILD_PATH, 'dist'))
   TEMPLATE_PATH = os.path.join(APP_PATH, "templates")
+
+  print( ROOT_PATH )
+  print( BUILD_PATH )
+  print( STATIC_PATH )
+  print( TEMPLATE_PATH )
 
   # Application
   app = Flask(

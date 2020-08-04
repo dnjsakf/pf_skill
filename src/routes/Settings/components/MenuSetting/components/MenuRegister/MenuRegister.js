@@ -102,8 +102,8 @@ const initValue = {
 }
 
 const MODE = {
-  UPDATE: MODE.UPDATE,
-  CREATE: MODE.CREATE,
+  UPDATE: "update",
+  CREATE: "create",
   DELETE: "delete",
 }
 
