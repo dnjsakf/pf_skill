@@ -3,7 +3,7 @@ Automat==20.2.0
 click==7.1.2
 constantly==15.1.0
 Flask==1.1.2
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 hyperlink==19.0.0
 idna==2.10
 incremental==17.5.0
