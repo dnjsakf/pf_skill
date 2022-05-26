@@ -13,6 +13,6 @@ MarkupSafe==1.1.1
 PyHamcrest==2.0.2
 python-dotenv==0.14.0
 six==1.15.0
-Twisted==20.3.0
+Twisted==22.4.0
 Werkzeug==1.0.1
 zope.interface==5.1.0
